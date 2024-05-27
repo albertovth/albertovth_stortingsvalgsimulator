@@ -242,9 +242,16 @@ def plot_half_circle_chart(data, colors):
         x = np.cos(np.radians(angle))
         y = np.sin(np.radians(angle))
 
-        label = ax.text(x * 0.2, y * 0.7, f"{aggregated_data['Parti'].iloc[i]}: {aggregated_data['TotalMandater'].iloc[i]}",
-                        horizontalalignment='center', verticalalignment='center', fontsize=10, bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="none"))
+        label = ax.text(
+            x * 0.7, y * 0.7, 
+            f"{aggregated_data['Parti'].iloc[i]}: {aggregated_data['TotalMandater'].iloc[i]}",
+            horizontalalignment='center', 
+            verticalalignment='center', 
+            fontsize=10, 
+            bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="none", alpha=0.6)  # Add alpha for transparency
+        )
         labels.append(label)
+
         
     plt.gca().set_aspect('equal')
     fig.tight_layout()
