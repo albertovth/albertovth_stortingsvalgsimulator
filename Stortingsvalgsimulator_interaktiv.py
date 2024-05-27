@@ -88,10 +88,9 @@ def national_seats(votes, total_seats, first_divisor=1.4):
    
     return seat_allocation
 def distribute_levelling_mandates(data_input, fixed_districts, national_result, threshold=0.04):
-    
     votes_per_party = data_input.groupby('Parti')['Stemmer'].sum().reset_index().sort_values(by='Parti')
     votes = votes_per_party['Stemmer'].values
-    parties_above_threshold = [i for i in range(len(votes)) if votes[i] / sum(votes) >= threshold]
+    parties_above_threshold = [votes_per_party['Parti'].iloc[i] for i in range(len(votes)) if votes[i] / sum(votes) >= threshold]
     
     district_mandates = data_input.groupby('Parti')['Distriktmandater'].sum().reindex(votes_per_party['Parti'], fill_value=0)
     
@@ -128,17 +127,19 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
             if current_value > best_value:
                 best_value = current_value
                 best_party = party_name
-        if best_party:
-            levelling_mandates.append({'Distrikt': district, 'Parti': best_party, 'Utjevningsmandater': 1})
-            district_mandates[best_party] += 1
-            mandates_needed[best_party] -= 1
-            used_districts.add(district)
-            
-            if mandates_needed[best_party] <= 0:
-                eligible_parties.remove(best_party)
-            
-            if len(levelling_mandates) >= fixed_districts['Utjevningsmandater'].sum():
-                break
+                
+            if best_party:
+                levelling_mandates.append({'Distrikt': district, 'Parti': best_party, 'Utjevningsmandater': 1})
+                district_mandates[best_party] += 1
+                mandates_needed[best_party] -= 1
+                used_districts.add(district)
+                
+                if mandates_needed[best_party] <= 0:
+                    eligible_parties.remove(best_party)
+                
+                if len(levelling_mandates) >= fixed_districts['Utjevningsmandater'].sum():
+                    break
+                
     return pd.DataFrame(levelling_mandates)
 def calculate_district_mandates(data_input, fixed_districts):
     districts = fixed_districts['Fylke'].unique()
