@@ -248,7 +248,8 @@ def plot_half_circle_chart(data, colors):
             horizontalalignment='center', 
             verticalalignment='center', 
             fontsize=10, 
-            bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="none", alpha=0.6)  # Add alpha for transparency
+            bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="none", alpha=0.6)
+            rotation=90
         )
         labels.append(label)
 
