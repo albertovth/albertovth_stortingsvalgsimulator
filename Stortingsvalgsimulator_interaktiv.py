@@ -242,14 +242,13 @@ def plot_half_circle_chart(data, colors):
         x = np.cos(np.radians(angle))
         y = np.sin(np.radians(angle))
 
-        if i % 2 == 0:
-            y_offset = 0.7
-        else:
-            y_offset = -0.7
+        # Alternate labels above and below
+        y_offset = 0.7 if i % 2 == 0 else -0.7
+        verticalalignment = 'bottom' if i % 2 == 0 else 'top'
         
         label = ax.text(x * 0.7, y * y_offset, f"{aggregated_data['Parti'].iloc[i]}: {aggregated_data['TotalMandater'].iloc[i]}",
-                        horizontalalignment='center', verticalalignment='center', fontsize=10, bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="none"))
-        labels.append(label)   
+                        horizontalalignment='center', verticalalignment=verticalalignment, fontsize=10, bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="none"))
+        labels.append(label)
     
     plt.gca().set_aspect('equal')
     fig.tight_layout()
