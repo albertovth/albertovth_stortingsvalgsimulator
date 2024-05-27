@@ -110,7 +110,8 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
         best_value = 0
         best_party = None
         best_district = None
-        
+        parties_to_remove = []
+
         for district_index, district_row in fixed_districts.iterrows():
             district = district_row['Fylke']
             if district in used_districts:
@@ -119,7 +120,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
             district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
             district_factor = district_votes.sum() / district_row['Distriktmandater']
             
-            for party_name in eligible_parties.copy():
+            for party_name in eligible_parties:
                 if party_name not in district_votes:
                     continue
 
@@ -141,11 +142,10 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
                     used_districts.add(best_district)
                     
                     if mandates_needed[best_party] <= 0:
-                        eligible_parties.remove(best_party)
+                        parties_to_remove.append(best_party)
+                        
+                    eligible_parties = [party for party in eligible_parties if party not in parties_to_remove]
                     
-                    if len(levelling_mandates) >= fixed_districts['Utjevningsmandater'].sum():
-                        break
-                
     return pd.DataFrame(levelling_mandates)
 def calculate_district_mandates(data_input, fixed_districts):
     districts = fixed_districts['Fylke'].unique()
