@@ -102,7 +102,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
     
     mandates_needed = national_result_df['Mandater'] - district_mandates
     
-    eligible_parties = mandates_needed[mandates_needed > 0].index.tolist()
+    eligible_parties = mandates_needed[(mandates_needed > 0) & (mandates_needed.index.isin(parties_above_threshold))].index.tolist()
     
     levelling_mandates = []
     used_districts = set()
