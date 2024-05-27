@@ -268,7 +268,7 @@ aggregated_data = results_df.groupby(['Parti']).agg({
 st.subheader('Resultat for hele landet')
 st.write(aggregated_data)
 color_mapping = {
-    1: '#8B0000', 2: '#A52A2A', 3: '#CD5C5C', 4: '#F08080', 5: '#FFA07A', 5.5: '#008000',
+    1: '#8B0000', 2: '#A52A2A', 3: '#CD5C5C', 4: '#F08080', 5: '#FFA07A', 5.5: '#355E3B',
     6: '#ADD8E6', 7: '#6495ED', 8: '#4169E1', 9: '#0000CD', 10: '#0000FF',
     11: '#FFA500'
 }
