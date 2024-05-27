@@ -241,12 +241,15 @@ def plot_half_circle_chart(data, colors):
         angle = (wedge.theta2 - wedge.theta1) / 2.0 + wedge.theta1
         x = np.cos(np.radians(angle))
         y = np.sin(np.radians(angle))
-       
+
+        if i % 2 == 0:
+            y_offset = 0.7
+        else:
+            y_offset = -0.7
         
-        label = ax.text(x * 0.7, y * 0.7, f"{aggregated_data['Parti'].iloc[i]}: {aggregated_data['TotalMandater'].iloc[i]}",
+        label = ax.text(x * 0.7, y * y_offset, f"{aggregated_data['Parti'].iloc[i]}: {aggregated_data['TotalMandater'].iloc[i]}",
                         horizontalalignment='center', verticalalignment='center', fontsize=10, bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="none"))
-        labels.append(label)
-   
+        labels.append(label)   
     
     plt.gca().set_aspect('equal')
     fig.tight_layout()
