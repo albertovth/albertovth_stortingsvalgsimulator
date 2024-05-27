@@ -113,9 +113,6 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
         best_district = None
 
         for district_index, district_row in fixed_districts.iterrows():
-            if len(levelling_mandates) >= total_levelling_mandates_needed:
-                break
-            
             district = district_row['Fylke']
             if district in used_districts:
                 continue
@@ -138,14 +135,17 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
                     best_party = party_name
                     best_district = district
 
-        if best_party and best_district:
-            levelling_mandates.append({'Distrikt': best_district, 'Parti': best_party, 'Utjevningsmandater': 1})
-            district_mandates[best_party] += 1
-            mandates_needed[best_party] -= 1
-            used_districts.add(best_district)
-            
-            if mandates_needed[best_party] <= 0:
-                eligible_parties.remove(best_party)
+            if best_party and best_district:
+                levelling_mandates.append({'Distrikt': best_district, 'Parti': best_party, 'Utjevningsmandater': 1})
+                district_mandates[best_party] += 1
+                mandates_needed[best_party] -= 1
+                used_districts.add(best_district)
+                
+                if mandates_needed[best_party] <= 0:
+                    eligible_parties.remove(best_party)
+                
+                if len(levelling_mandates) >= total_levelling_mandates_needed:
+                    break
     
     return pd.DataFrame(levelling_mandates)
 
