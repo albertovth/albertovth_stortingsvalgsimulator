@@ -105,15 +105,17 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
     
     levelling_mandates = []
     used_districts = set()
-    total_levelling_mandates_needed = fixed_districts['Utjevningsmandater'].sum()
+    total_levelling_mandates_needed = 19  # Ensure exactly 19 mandates are assigned
     
-    while len(levelling_mandates) < total_levelling_mandates_needed:
+    while len(levelling_mandates) < total_levelling_mandates_needed and eligible_parties:
         best_value = 0
         best_party = None
         best_district = None
-        parties_to_remove = []
 
         for district_index, district_row in fixed_districts.iterrows():
+            if len(levelling_mandates) >= total_levelling_mandates_needed:
+                break
+            
             district = district_row['Fylke']
             if district in used_districts:
                 continue
@@ -143,16 +145,10 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
             used_districts.add(best_district)
             
             if mandates_needed[best_party] <= 0:
-                parties_to_remove.append(best_party)
-
-        eligible_parties = [party for party in eligible_parties if party not in parties_to_remove]
-        
-        # Reset used districts if we run out of districts but still need more mandates
-        if len(levelling_mandates) < total_levelling_mandates_needed and not eligible_parties:
-            eligible_parties = mandates_needed[(mandates_needed > 0) & (mandates_needed.index.isin(parties_above_threshold))].index.tolist()
-            used_districts = set()
+                eligible_parties.remove(best_party)
     
     return pd.DataFrame(levelling_mandates)
+
 def calculate_district_mandates(data_input, fixed_districts):
     districts = fixed_districts['Fylke'].unique()
     district_mandates = pd.DataFrame(index=districts, columns=data_input['Parti'].unique())
