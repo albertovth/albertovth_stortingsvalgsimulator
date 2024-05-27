@@ -149,45 +149,43 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
                 
             eligible_parties = [party for party in eligible_parties if party not in parties_to_remove]
     
-    if len(levelling_mandates) < total_levelling_mandates_needed:
-        remaining_mandates = total_levelling_mandates_needed - len(levelling_mandates)
-        for i in range(remaining_mandates):
-            for district_index, district_row in fixed_districts.iterrows():
-                district = district_row['Fylke']
-                if district in used_districts:
+    # Ensure exactly 19 mandates are assigned
+    while len(levelling_mandates) < total_levelling_mandates_needed:
+        best_value = 0
+        best_party = None
+        best_district = None
+        
+        for district_index, district_row in fixed_districts.iterrows():
+            district = district_row['Fylke']
+            if district in used_districts:
+                continue
+            
+            district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
+            district_factor = district_votes.sum() / district_row['Distriktmandater']
+            
+            for party_name in mandates_needed[mandates_needed > 0].index.tolist():
+                if party_name not in district_votes:
                     continue
                 
-                district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
-                district_factor = district_votes.sum() / district_row['Distriktmandater']
+                current_district_mandates = data_input[(data_input['Parti'] == party_name) & (data_input['Distrikt'] == district)]['Distriktmandater'].sum()
+                if current_district_mandates == 0:
+                    current_value = district_votes[party_name] / district_factor
+                else:
+                    current_value = district_votes[party_name] / ((2 * current_district_mandates + 1) * district_factor)
                 
-                best_value = 0
-                best_party = None
-                
-                for party_name in eligible_parties:
-                    if party_name not in district_votes:
-                        continue
-                    
-                    current_district_mandates = data_input[(data_input['Parti'] == party_name) & (data_input['Distrikt'] == district)]['Distriktmandater'].sum()
-                    if current_district_mandates == 0:
-                        current_value = district_votes[party_name] / district_factor
-                    else:
-                        current_value = district_votes[party_name] / ((2 * current_district_mandates + 1) * district_factor)
-                    
-                    if current_value > best_value:
-                        best_value = current_value
-                        best_party = party_name
-                
-                if best_party:
-                    levelling_mandates.append({'Distrikt': district, 'Parti': best_party, 'Utjevningsmandater': 1})
-                    district_mandates[best_party] += 1
-                    mandates_needed[best_party] -= 1
-                    used_districts.add(district)
-                    
-                    if mandates_needed[best_party] <= 0:
-                        eligible_parties.remove(best_party)
-                    break
+                if current_value > best_value:
+                    best_value = current_value
+                    best_party = party_name
+                    best_district = district
+
+        if best_party and best_district:
+            levelling_mandates.append({'Distrikt': best_district, 'Parti': best_party, 'Utjevningsmandater': 1})
+            district_mandates[best_party] += 1
+            mandates_needed[best_party] -= 1
+            used_districts.add(best_district)
     
     return pd.DataFrame(levelling_mandates)
+
 
 
 def calculate_district_mandates(data_input, fixed_districts):
