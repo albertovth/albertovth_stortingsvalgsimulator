@@ -11,7 +11,7 @@ districts = [col for col in df.columns if col not in ['Parti', 'Kategori']]
 email_address = "alberto@vthoresen.no"
 st.title("Interaktiv valgsimulator")
 st.markdown(f"Kontakt: [Alberto Valiente Thoresen](mailto:{email_address})")
-st.markdown("Juster prognoser for valgresultater for valgdistriktene i venstremenyen.\nValgoppslutning per distrikt kan også oppgis nederst i venstremenyen.\nUtgangspunktet baseres på resultatene til stortingsvalget 2021.\nDiagram for prognostisert mandatfordeling presenteres nederst i hovedsiden")
+st.markdown("Juster prognoser for valgresultater for valgdistriktene i venstremenyen.\nValgoppslutning per distrikt kan også oppgis nederst i venstremenyen.\nUtgangspunktet baseres på resultatene til stortingsvalget 2021.\nDiagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.\nDet kan ta litt tid før dette vises.")
 percentage_dict = {}
 participation_dict = {}
 st.sidebar.header("Her kan du endre prosent")
