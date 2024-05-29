@@ -92,6 +92,8 @@ def national_seats(votes, total_seats, first_divisor=1.4):
     return seat_allocation
 import pandas as pd
 
+import pandas as pd
+
 def distribute_levelling_mandates(data_input, fixed_districts, national_result, threshold=0.04):
     votes_per_party = data_input.groupby('Parti')['Stemmer'].sum().reset_index().sort_values(by='Parti')
     votes = votes_per_party['Stemmer'].values
@@ -168,7 +170,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
             district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
             district_factor = district_votes.sum() / district_row['Distriktmandater']
             
-            for party_name in (mandates_needed.index.isin(parties_above_threshold))].index.tolist():
+            for party_name in parties_above_threshold:
                 if party_name not in district_votes:
                     continue
                 
