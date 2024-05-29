@@ -90,10 +90,13 @@ def national_seats(votes, total_seats, first_divisor=1.4):
         seat_allocation[flat_quotients[i][1]] += 1
    
     return seat_allocation
+import pandas as pd
+
 def distribute_levelling_mandates(data_input, fixed_districts, national_result, threshold=0.04):
     votes_per_party = data_input.groupby('Parti')['Stemmer'].sum().reset_index().sort_values(by='Parti')
     votes = votes_per_party['Stemmer'].values
-    parties_above_threshold = [votes_per_party['Parti'].iloc[i] for i in range(len(votes)) if votes[i] / sum(votes) >= threshold]
+    total_votes = sum(votes)
+    parties_above_threshold = votes_per_party[votes_per_party['Stemmer'] / total_votes >= threshold]['Parti'].tolist()
     
     district_mandates = data_input.groupby('Parti')['Distriktmandater'].sum().reindex(votes_per_party['Parti'], fill_value=0)
     
@@ -188,6 +191,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
             used_districts.add(best_district)
     
     return pd.DataFrame(levelling_mandates)
+
 
 def calculate_district_mandates(data_input, fixed_districts):
     districts = fixed_districts['Fylke'].unique()
