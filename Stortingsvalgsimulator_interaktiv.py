@@ -166,7 +166,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
             district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
             district_factor = district_votes.sum() / district_row['Distriktmandater']
             
-            for party_name in mandates_needed[mandates_needed > 0].index.tolist():
+            for party_name in mandates_needed[(mandates_needed > 0) & (mandates_needed.index.isin(parties_above_threshold))].index.tolist():
                 if party_name not in district_votes:
                     continue
                 
