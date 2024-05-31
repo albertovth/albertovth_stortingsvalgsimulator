@@ -328,4 +328,7 @@ color_mapping = {
     6: '#ADD8E6', 7: '#6495ED', 8: '#4169E1', 9: '#0000CD', 10: '#0000FF',
     11: '#FFA500'
 }
+
+aggregated_data = aggregated_data[aggregated_data['TotalMandater'] > 0]
+
 plot_half_circle_chart(aggregated_data, color_mapping)
