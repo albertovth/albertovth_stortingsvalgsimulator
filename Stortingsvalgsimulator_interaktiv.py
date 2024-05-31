@@ -90,9 +90,6 @@ def national_seats(votes, total_seats, first_divisor=1.4):
         seat_allocation[flat_quotients[i][1]] += 1
    
     return seat_allocation
-import pandas as pd
-
-import pandas as pd
 
 def distribute_levelling_mandates(data_input, fixed_districts, national_result, threshold=0.04):
     votes_per_party = data_input.groupby('Parti')['Stemmer'].sum().reset_index().sort_values(by='Parti')
@@ -156,7 +153,6 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
                 
             eligible_parties = [party for party in eligible_parties if party not in parties_to_remove]
     
-    # Ensure exactly 19 mandates are assigned
     while len(levelling_mandates) < total_levelling_mandates_needed:
         best_value = 0
         best_party = None
