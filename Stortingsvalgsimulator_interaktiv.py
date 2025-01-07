@@ -68,7 +68,7 @@ fixed_districts = pd.DataFrame({
         'Finnmark', 'Aust-Agder', 'Sogn og Fjordane'
     ],
     'Distriktmandater': [
-        19, 18, 15, 13, 9, 8, 8, 7, 7, 6, 6, 5, 5, 5, 5, 4, 4, 3, 3
+        19, 19, 15, 13, 9, 8, 8, 7, 7, 6, 6, 5, 5, 5, 5, 4, 3, 3, 3
     ],
     'Utjevningsmandater': [1] * 19
 })
