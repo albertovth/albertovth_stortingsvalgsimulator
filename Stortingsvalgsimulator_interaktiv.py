@@ -649,7 +649,7 @@ st.markdown(f"Kontakt: [Alberto Valiente Thoresen](mailto:{email_address})")
 st.markdown("Juster prognoser for valgresultater for valgdistriktene i venstremenyen. Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen. \n"
             "Utgangspunktet baseres på raden 'Siste lokale måling' som publiseres i [Poll og polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), "
             "siste oppdatering per 7. januar 2025, med befolkningsprognoser for 2025 per valgdistrikt fra SSB. Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
-            "Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier) fra Poll of polls er ikke tatt med i beregningene.")
+            "Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier) fra Poll of polls er ikke tatt med i beregningene, men brukeren kan justere prosent for disse partiene, for å simulere scenarier. Bare sørg for at prosent for alle partier i valgdistriktet summerer 100 %")
 st.write("[Befolkningsprognosene fra SSB som fungerte som kilde finner du her](https://www.ssb.no/en/befolkning/befolkningsframskrivinger/artikler/norways-2022-national-population-projections/_/attachment/inline/37d9dfef-1cd6-4390-b6ab-1601e21b32a8:1061870b3633187b8e861856f85e2dcc6638f666/RAPP2022-28_nasjfram%20ENG.pdf)")
 st.write("[Her finner du tabellene som forklarer fordelingen av befolkningsveksten etter valgdistrikt](https://www.ssb.no/befolkning/befolkningsframskrivinger)")
 percentage_dict = {}
