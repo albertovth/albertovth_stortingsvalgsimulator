@@ -643,7 +643,7 @@ email_address = "alberto@vthoresen.no"
 st.title("Stortingsvalgsimulator")
 st.markdown("""
 ## Viktig melding
-Merk at per siste oppdatering 8. januar 2024 mangler fire valgdistrikter nyere meningsmålinger. De siste tilgjengelige dataene for disse distriktene er fra 2021 eller 2022. Dette kan påvirke nøyaktigheten av prognosen for disse spesifikke distriktene. Nyere data vil bli inkludert etterhvert som de blir tilgjengelige, spesielt etterhvert som vi nærmer oss valget i september 2025.
+*Merk at per siste oppdatering 8. januar 2024 mangler fire valgdistrikter nyere meningsmålinger. De siste tilgjengelige dataene for disse distriktene er fra 2021 eller 2022. Dette kan påvirke nøyaktigheten av prognosen for disse spesifikke distriktene. Nyere data vil bli inkludert etterhvert som de blir tilgjengelige, spesielt etterhvert som vi nærmer oss valget i september 2025.*
 """)
 st.markdown(f"Kontakt: [Alberto Valiente Thoresen](mailto:{email_address})")
 st.markdown("Juster prognoser for valgresultater for valgdistriktene i venstremenyen. Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen. \n"
