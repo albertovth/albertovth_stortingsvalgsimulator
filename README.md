@@ -20,7 +20,7 @@ Stortingsvalgsimulatoren er ment å:
 
 1. **Åpne nettleseren din**: Du trenger ikke å installere noe programvare eller laste ned skript.
 2. **Gå til Streamlit-appen**: [Klikk på denne lenken for å starte simulatoren](https://valgsimulator.streamlit.app/)
-3. **Utforsk**: Bruk menyene og valgene i appen for å simulere ulike valgscenarier. Juster parametere som stemmeandeler for partiene og observer hvordan endringene påvirker mandatfordelingen.
+3. **Utforsk**: Bruk menyene og valgene i appen for å simulere ulike valgscenarier. Juster parametere som stemmeandeler for partiene og se hvordan endringene påvirker mandatfordelingen.
 
 ### Hvordan kjøre lokalt
 
