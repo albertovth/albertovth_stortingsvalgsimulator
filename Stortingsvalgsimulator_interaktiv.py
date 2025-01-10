@@ -640,21 +640,48 @@ df = pd.DataFrame(default_values)
 
 districts = [col for col in df.columns if col not in ['Parti', 'Kategori']]
 email_address = "alberto@vthoresen.no"
+import streamlit as st
+
 st.title("Stortingsvalgsimulator")
-st.markdown( "[Se kildekoden på GitHub](https://github.com/albertovth/albertovth_stortingsvalgsimulator)")
-st.markdown("""**Diagram under**""")
-st.markdown("""Dette verktøyet bruker meningsmålinger per valgdistrikt og den modifiserte Sainte-Laguës-metoden, som benyttes i det norske valgsystemet. Målet med prosjektet er å øke forståelsen av valgprosesser og vise hvordan Python og Streamlit kan brukes til å analysere data fra meningsmålinger""")
+
+# Sammendrag
 st.markdown("""
-## Viktig melding
-*Merk at per siste oppdatering 7. januar 2024 mangler fire valgdistrikter nyere meningsmålinger. De siste tilgjengelige dataene for disse distriktene er fra 2021 eller 2022. Dette kan påvirke nøyaktigheten av prognosen for disse spesifikke distriktene. Nyere data vil bli inkludert etterhvert som de blir tilgjengelige, spesielt etterhvert som vi nærmer oss valget i september 2025.*
+Dette verktøyet lar deg simulere valgresultater basert på meningsmålinger per valgdistrikt. 
+Det bruker den modifiserte Sainte-Laguës-metoden som benyttes i det norske valgsystemet. 
+Målet er å øke forståelsen for valgprosesser og vise hvordan Python og Streamlit kan brukes til dataanalyse.
 """)
+
+# Lenker til GitHub og kontakt
+st.markdown("### Ressurser")
+st.markdown("[Se kildekoden på GitHub](https://github.com/albertovth/albertovth_stortingsvalgsimulator)")
 st.markdown(f"Kontakt: [Alberto Valiente Thoresen](mailto:{email_address})")
-st.markdown("Juster prognoser for valgresultater for valgdistriktene i venstremenyen. Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen. \n"
-            "Utgangspunktet baseres på raden 'Siste lokale måling' som publiseres i [Poll og polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), "
-            "siste oppdatering per 7. januar 2025, med befolkningsprognoser for 2025 per valgdistrikt fra SSB. Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
-            "Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier) fra Poll of polls er ikke tatt med i beregningene, men brukeren kan justere prosent for disse partiene, for å simulere scenarier. Bare sørg for at prosent for alle partier i valgdistriktet summerer 100 %")
-st.write("[Befolkningsprognosene fra SSB som fungerte som kilde finner du her](https://www.ssb.no/en/befolkning/befolkningsframskrivinger/artikler/norways-2022-national-population-projections/_/attachment/inline/37d9dfef-1cd6-4390-b6ab-1601e21b32a8:1061870b3633187b8e861856f85e2dcc6638f666/RAPP2022-28_nasjfram%20ENG.pdf)")
-st.write("[Her finner du tabellene som forklarer fordelingen av befolkningsveksten etter valgdistrikt](https://www.ssb.no/befolkning/befolkningsframskrivinger)")
+
+# Viktig melding
+st.warning("""
+**Viktig melding:**
+Per siste oppdatering 7. januar 2024 mangler fire valgdistrikter nyere meningsmålinger. 
+De siste tilgjengelige dataene for disse distriktene er fra 2021 eller 2022. 
+Dette kan påvirke nøyaktigheten av prognosen. 
+Nyere data vil bli inkludert etterhvert som de blir tilgjengelige, spesielt før valget i september 2025.
+""")
+
+# Diagram og instruksjoner
+st.markdown("### Diagram og simulering")
+st.markdown("""
+Diagrammet under viser mandatfordeling basert på nåværende data. 
+Du kan justere prognoser for valgresultater for valgdistriktene i venstremenyen. 
+Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen.
+
+Utgangspunktet er raden 'Siste lokale måling' som publiseres i 
+[Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), oppdatert per 7. januar 2025. 
+Data om befolkningsprognoser for 2025 er hentet fra SSB.
+""")
+
+# Kilder
+st.markdown("### Kilder")
+st.write("[Befolkningsprognosene fra SSB finner du her](https://www.ssb.no/en/befolkning/befolkningsframskrivinger/artikler/norways-2022-national-population-projections/_/attachment/inline/37d9dfef-1cd6-4390-b6ab-1601e21b32a8:1061870b3633187b8e861856f85e2dcc6638f666/RAPP2022-28_nasjfram%20ENG.pdf)")
+st.write("[Tabeller for befolkningsvekst etter valgdistrikt](https://www.ssb.no/befolkning/befolkningsframskrivinger)")
+
 percentage_dict = {}
 participation_dict = {}
 st.sidebar.header("Her kan du endre prosent")
