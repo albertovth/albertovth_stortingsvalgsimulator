@@ -646,9 +646,9 @@ st.title("Stortingsvalgsimulator")
 
 # Sammendrag
 st.markdown("""
-Dette verktøyet lar deg simulere valgresultater basert på meningsmålinger per valgdistrikt. 
-Det bruker den modifiserte Sainte-Laguës-metoden som benyttes i det norske valgsystemet. 
-Målet er å øke forståelsen for valgprosesser og vise hvordan Python og Streamlit kan brukes til dataanalyse.
+Dette verktøyet lar deg simulere valgresultater, basert på meningsmålinger per valgdistrikt. 
+Verktøyet bruker den modifiserte Sainte-Laguës-metoden som benyttes i det norske valgsystemet. 
+Målet er å øke forståelsen for valgprosesser, og vise hvordan Python og Streamlit kan brukes til dataanalyse.
 """)
 
 # Lenker til GitHub og kontakt
@@ -659,10 +659,10 @@ st.markdown(f"Kontakt: [Alberto Valiente Thoresen](mailto:{email_address})")
 # Viktig melding
 st.warning("""
 **Viktig melding:**
-Per siste oppdatering 7. januar 2024 mangler fire valgdistrikter nyere meningsmålinger. 
+Per siste oppdatering 7. januar 2025 mangler fire valgdistrikter nyere meningsmålinger. 
 De siste tilgjengelige dataene for disse distriktene er fra 2021 eller 2022. 
 Dette kan påvirke nøyaktigheten av prognosen. 
-Nyere data vil bli inkludert etterhvert som de blir tilgjengelige, spesielt før valget i september 2025.
+Nyere data vil bli inkludert etterhvert som de blir tilgjengelige. Oppdateringer vil blir gjort rundt en gang i måneden frem til sommeren 2025, og hyppigere rett før valget, som er i september 2025.
 """)
 
 # Diagram og instruksjoner
@@ -681,6 +681,7 @@ Data om befolkningsprognoser for 2025 er hentet fra SSB.
 st.markdown("### Kilder")
 st.write("[Befolkningsprognosene fra SSB finner du her](https://www.ssb.no/en/befolkning/befolkningsframskrivinger/artikler/norways-2022-national-population-projections/_/attachment/inline/37d9dfef-1cd6-4390-b6ab-1601e21b32a8:1061870b3633187b8e861856f85e2dcc6638f666/RAPP2022-28_nasjfram%20ENG.pdf)")
 st.write("[Tabeller for befolkningsvekst etter valgdistrikt](https://www.ssb.no/befolkning/befolkningsframskrivinger)")
+st.write("[Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0)")
 
 percentage_dict = {}
 participation_dict = {}
