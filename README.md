@@ -18,17 +18,23 @@ Stortingsvalgsimulatoren er ment å:
 
 ## Hvordan bruke
 
+1. **Åpne nettleseren din**: Du trenger ikke å installere noe programvare eller laste ned skript.
+2. **Gå til Streamlit-appen**: Klikk på denne lenken for å starte simulatoren: [Streamlit-app-link](#).
+3. **Utforsk**: Bruk menyene og valgene i appen for å simulere ulike valgscenarier. Juster parametere som stemmeandeler for partiene og observer hvordan endringene påvirker mandatfordelingen.
+
+### Hvordan kjøre lokalt
+
 1. **Installer Python**: Forsikre deg om at du har Python 3 installert på maskinen din.
-2. **Last ned skriptet**: [Stortingsvalgsimulator\_interaktiv.py](https://github.com/albertovth/albertovth_stortingsvalgsimulator/blob/main/Stortingsvalgsimulator_interaktiv.py)
-3. **Installer avhengigheter**: Kør følgende kommando for å installere eventuelle avhengigheter:
+2. **Last ned skriptet**: [Stortingsvalgsimulator](https://github.com/albertovth/albertovth_stortingsvalgsimulator).
+3. **Installer avhengigheter**: Åpne terminalen og kjør:
    ```bash
    pip install -r requirements.txt
    ```
-4. **Kør skriptet**: Start simulatoren ved å kjøre:
+4. **Start appen**: Kjør Streamlit-serveren ved å skrive:
    ```bash
-   python Stortingsvalgsimulator_interaktiv.py
+   streamlit run Stortingsvalgsimulator_interaktiv.py
    ```
-5. **Utforsk**: Bruk menyene og valgene for å simulere ulike valgscenarier.
+5. **Bruk appen lokalt**: Åpne lenken som vises i terminalen (som standard er det `http://localhost:8501`).
 
 ## Eksempel
 
