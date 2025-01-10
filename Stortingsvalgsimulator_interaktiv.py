@@ -644,7 +644,10 @@ import streamlit as st
 
 st.title("Stortingsvalgsimulator")
 
-st.markdown("""**Mobilbrukere: Utvid venstremenyen for å justere prosent med pilen til venstre**""")
+
+st.markdown("""
+### For å se venstremnyen fra mobile enheter: utvid med pilen til venstre, for å justere prosentfordeling og valgdeltakelse per distrikt.
+""")
 
 # Sammendrag
 st.markdown("""
