@@ -641,7 +641,7 @@ df = pd.DataFrame(default_values)
 districts = [col for col in df.columns if col not in ['Parti', 'Kategori']]
 email_address = "alberto@vthoresen.no"
 st.title("Stortingsvalgsimulator")
-st.markdown( "[Se kildekoden på GitHub](https://github.com/albertovth/albertovth_stortingsvalgsimulator)", unsafe_allow_html=True )
+st.markdown( "[Se kildekoden på GitHub](https://github.com/albertovth/albertovth_stortingsvalgsimulator)")
 st.markdown("""**Diagram under**""")
 st.markdown("""Dette verktøyet bruker meningsmålinger per valgdistrikt og den modifiserte Sainte-Laguës-metoden, som benyttes i det norske valgsystemet. Målet med prosjektet er å øke forståelsen av valgprosesser og vise hvordan Python og Streamlit kan brukes til å analysere data fra meningsmålinger""")
 st.markdown("""
