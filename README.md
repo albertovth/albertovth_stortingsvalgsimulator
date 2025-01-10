@@ -25,11 +25,10 @@ Stortingsvalgsimulatoren er ment å:
 ### Hvordan kjøre lokalt
 
 1. **Installer Python**: Forsikre deg om at du har Python 3 installert på maskinen din.
-2. **Last ned skriptet**: [Stortingsvalgsimulator](https://github.com/albertovth/albertovth_stortingsvalgsimulator).
-3. **Installer avhengigheter**: Åpne terminalen og kjør:
+2. **Last ned prosjektet**: Gå til GitHub-repositoriet og last ned hele prosjektmappen som en ZIP-fil: [Stortingsvalgsimulator](https://github.com/albertovth/albertovth_stortingsvalgsimulator). Pakk ut filene på datamaskinen din.
+3. **Installer avhengigheter**: Åpne terminalen, naviger til mappen der prosjektfilene ligger, og kjør:
    ```bash
    pip install -r requirements.txt
-   ```
 4. **Start appen**: Kjør Streamlit-serveren ved å skrive:
    ```bash
    streamlit run Stortingsvalgsimulator_interaktiv.py
