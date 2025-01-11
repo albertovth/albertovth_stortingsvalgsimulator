@@ -16,13 +16,13 @@ Stortingsvalgsimulatoren er ment å:
 - Justering av parametere som stemmeandel og sperregrense.
 - Visualisering av mandatfordeling.
 
-## Hvordan bruke
+## Hvordan å bruke
 
 1. **Åpne nettleseren din**: Du trenger ikke å installere noe programvare eller laste ned skript.
 2. **Gå til Streamlit-appen**: [Klikk på denne lenken for å starte simulatoren](https://valgsimulator.streamlit.app/)
 3. **Utforsk**: Bruk menyene og valgene i appen for å simulere ulike valgscenarier. Juster parametere som stemmeandeler for partiene og se hvordan endringene påvirker mandatfordelingen.
 
-### Hvordan kjøre lokalt
+### Hvordan å kjøre lokalt
 
 1. **Installer Python**: Forsikre deg om at du har Python 3 installert på maskinen din.
 2. **Last ned prosjektet**: Gå til GitHub-repositoriet og last ned hele prosjektmappen som en ZIP-fil: [Stortingsvalgsimulator](https://github.com/albertovth/albertovth_stortingsvalgsimulator). Pakk ut filene på datamaskinen din.
