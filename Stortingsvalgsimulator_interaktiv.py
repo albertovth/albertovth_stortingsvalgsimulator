@@ -667,7 +667,7 @@ st.warning("""
 Per siste oppdatering 7. januar 2025 mangler fire valgdistrikter nyere meningsmålinger. 
 De siste tilgjengelige dataene for disse distriktene er fra 2021 eller 2022. 
 Dette kan påvirke nøyaktigheten av prognosen. 
-Nyere data vil bli inkludert etterhvert som de blir tilgjengelige. Oppdateringer vil blir gjort rundt en gang i måneden frem til sommeren 2025, og hyppigere rett før valget, som er i september 2025.
+Nyere data vil bli inkludert etterhvert som de blir tilgjengelige. Oppdateringer vil bli gjort rundt en gang i måneden frem til sommeren 2025, og hyppigere rett før valget, som er i september 2025.
 """)
 
 # Diagram og instruksjoner
