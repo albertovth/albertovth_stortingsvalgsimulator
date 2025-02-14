@@ -668,6 +668,7 @@ Per siste oppdatering 12. februar 2025 mangler to valgdistrikter nyere meningsm�
 De siste tilgjengelige dataene for disse distriktene er fra 2021 eller 2022. 
 Dette kan påvirke nøyaktigheten av prognosen. 
 Nyere data vil bli inkludert etterhvert som de blir tilgjengelige. Oppdateringer vil bli gjort rundt en gang i måneden frem til sommeren 2025, og hyppigere rett før valget, som er i september 2025.
+Merk også at kategorien "Andre" i Poll of polls omfatter flere partier. Dette fordeles proporsjonelt til "Andre" partier som deltok ved forrige valg, ifølge stemmene de fikk. Dette er ikke presis, men bedre enn å behandle hele kategorien "Andre" som ett parti.
 """)
 
 # Diagram og instruksjoner
