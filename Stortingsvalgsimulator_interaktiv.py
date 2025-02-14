@@ -675,8 +675,8 @@ Merk også at kategorien "Andre" i Poll of polls omfatter flere partier. Dette f
 st.markdown("### Diagram og simulering")
 st.markdown("Juster prognoser for valgresultater for valgdistriktene i venstremenyen. Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen. \n"
             "Utgangspunktet baseres på raden 'Siste lokale måling' som publiseres i [Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), "
-            "siste oppdatering per 7. januar 2025, med befolkningsprognoser for 2025 per valgdistrikt fra SSB. Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
-            "Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier), fra Poll of polls (Dvs. mindre partier, som ikke er R, SV, Ap, Sp, MDG, V, KrF, H og Frp) er ikke tatt med i beregningene. Men du kan justere prosent for disse partiene, eller oppdatere prosenten til de store partiene. Bare sørg for at prosent for alle partier i valgdistriktet summerer 100 prosent.")
+            "siste oppdatering per 12. februar 2025, med befolkningsprognoser for 2025 per valgdistrikt fra SSB. Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
+            "Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier), fra Poll of polls (Dvs. mindre partier, som ikke er R, SV, Ap, Sp, MDG, V, KrF, H og Frp) fordeles proporsjonelt til andre partier som deltok i Stortingsvalget 2021, basert på resultatet disse partiene fikk da. Du kan justere prosent for disse partiene, eller oppdatere prosenten til de store partiene i venstre menyen. For bedre resultater sørg for at prosent for alle partier i valgdistriktet summerer 100 prosent.")
 
 
 # Kilder
