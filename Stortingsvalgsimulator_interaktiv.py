@@ -664,7 +664,7 @@ st.markdown(f"Kontakt: [Alberto Valiente Thoresen](mailto:{email_address})")
 # Viktig melding
 st.warning("""
 **Viktig melding:**
-Per siste oppdatering 23. februar 2025 mangler to valgdistrikter nyere meningsmålinger. 
+Per siste oppdatering 23. mars 2025 mangler to valgdistrikter nyere meningsmålinger. 
 De siste tilgjengelige dataene for disse distriktene er fra juni eller juli 2024.
 Dette kan påvirke nøyaktigheten av prognosen. 
 Nyere data vil bli inkludert etterhvert som de blir tilgjengelige. Oppdateringer vil bli gjort rundt en gang i måneden frem til sommeren 2025, og hyppigere rett før valget, som er i september 2025.
