@@ -664,8 +664,8 @@ st.markdown(f"Kontakt: [Alberto Valiente Thoresen](mailto:{email_address})")
 # Viktig melding
 st.warning("""
 **Viktig melding:**
-Per siste oppdatering 23. mars 2025 har ikke to valgdistrikter nyere meningsmålinger. 
-De siste tilgjengelige dataene for disse distriktene er fra juni eller juli 2024.
+Per siste oppdatering 23. mars 2025 har ikke to valgdistrikter (Akershus og Telemark) nyere (fra 2024-25) meningsmålinger. 
+De siste tilgjengelige dataene for disse distriktene er fra 2021.
 Dette kan påvirke nøyaktigheten av prognosen. 
 Nyere data vil bli inkludert etterhvert som de blir tilgjengelige. Oppdateringer vil bli gjort rundt en gang i måneden frem til sommeren 2025, og hyppigere rett før valget, som er i september 2025.
 Merk også at kategorien "Andre" i Poll of polls omfatter flere partier. Dette fordeles proporsjonelt til "Andre" partier som deltok ved forrige valg, ifølge stemmene de fikk. Dette er ikke presis, men bedre enn å behandle hele kategorien "Andre" som ett parti.
