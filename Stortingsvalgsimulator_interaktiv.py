@@ -1000,4 +1000,16 @@ color_mapping = {
 
 aggregated_data = aggregated_data[aggregated_data['TotalMandater'] > 0]
 
+
+rodgronne_partier = ["R", "SV", "Ap", "Sp", "MDG"]
+borgerlige_partier = ["V", "KrF", "H", "FrP"]
+
+rodgronne_mandater = aggregated_data[aggregated_data['Parti'].isin(rodgronne_partier)]['TotalMandater'].sum()
+borgerlige_mandater = aggregated_data[aggregated_data['Parti'].isin(borgerlige_partier)]['TotalMandater'].sum()
+
+
+st.markdown(f"**Rødgrønne: {rodgronne_mandater} mandater**")
+st.markdown(f"**Borgerlige: {borgerlige_mandater} mandater**")
+
+
 plot_half_circle_chart(aggregated_data, color_mapping)
