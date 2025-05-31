@@ -675,7 +675,7 @@ Merk også at kategorien "Andre" i Poll of polls omfatter flere partier. Dette f
 st.markdown("### Diagram og simulering")
 st.markdown("Juster prognoser for valgresultater for valgdistriktene i venstremenyen. Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen. \n"
             "Utgangspunktet baseres på raden 'Siste lokale måling' som publiseres i [Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), "
-            "siste oppdatering per 28. mai 2025, med befolkningsprognoser for 2025 per valgdistrikt fra SSB. Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
+            "siste oppdatering per 23. mars 2025, med befolkningsprognoser for 2025 per valgdistrikt fra SSB. Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
             "Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier), fra Poll of polls (Dvs. mindre partier, som ikke er R, SV, Ap, Sp, MDG, V, KrF, H og Frp) fordeles proporsjonelt til andre partier som deltok i Stortingsvalget 2021, basert på resultatet disse partiene fikk da. Du kan justere prosent for disse partiene, eller oppdatere prosenten til de store partiene i venstremenyen. For bedre resultater sørg for at prosentandel for alle partier i valgdistriktet summerer 100 prosent.")
 
 
@@ -791,168 +791,191 @@ def national_seats(votes, total_seats, first_divisor=1.4):
    
     return seat_allocation
 
-def distribute_levelling_mandates(data_input, fixed_districts, national_result, threshold=0.04):
+def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_result=None, threshold=0.04):
     import streamlit as st
     import pandas as pd
 
-    votes_per_party = data_input.groupby('Parti')['Stemmer'].sum().reset_index().sort_values(by='Parti')
-    votes = votes_per_party['Stemmer'].values
-    total_votes = votes.sum()
-
-    parties_above_threshold = [
-        votes_per_party['Parti'].iloc[i]
-        for i in range(len(votes))
-        if votes[i] / total_votes >= threshold
+    # 0) EKSKLUDER IKKE-POLITISKE RADER (f.eks. prognoser og velger-tall)
+    ikke_partier = [
+        'Prognostisert valgoppslutning per fylke - godkjente stemmer',
+        'Personer med stemmerett 2025'
     ]
+    real_data = data_input[~data_input['Parti'].isin(ikke_partier)].copy()
 
-    district_mandates = data_input.groupby('Parti')['Distriktmandater'].sum().reindex(
-        votes_per_party['Parti'], fill_value=0
-    )
+    # 1) NASJONALE STEMMER FOR ALLE “REELLE” PARTIER
+    all_votes = real_data.groupby('Parti')['Stemmer'].sum()
+    total_votes = all_votes.sum()
 
-    national_result_df = pd.DataFrame({
-        'Parti': votes_per_party['Parti'],
-        'Mandater': national_result
-    }).set_index('Parti')
+    # 2) FINN PARTIER SOM HAR ≥ 4 % NASJONALT OG STO PÅ LISTE I ALLE FYLKER (§ 11-7(2))
+    fylker = fixed_districts['Fylke'].tolist()
 
-    mandates_needed = national_result_df['Mandater'] - district_mandates
+    def har_stilt_i_alle_fylker(parti):
+        for D in fylker:
+            sub = real_data[
+                (real_data['Parti'] == parti) &
+                (real_data['Distrikt'] == D)
+            ]
+            if sub.empty:
+                return False
+        return True
 
-    eligible_parties = [
+    four_percent_parties = [
         parti
-        for parti in parties_above_threshold
-        if mandates_needed.get(parti, 0) > 0
+        for parti, v in all_votes.items()
+        if (v / total_votes) >= threshold and har_stilt_i_alle_fylker(parti)
     ]
 
-    levelling_mandates = []
+    if not four_percent_parties:
+        # Ingen som oppfyller § 11-7(2)
+        return pd.DataFrame(columns=['Distrikt', 'Parti', 'Utjevningsmandater'])
+
+    # 3) HENT DISTRIKTSMANDATER FOR ALLE PARTIER (brukes til under4-trekking + overheng-sjekk)
+    district_mandates_full = real_data.groupby('Parti')['Distriktmandater'].sum()
+
+    # 4) KJØR NASJONAL SAINTE-LAGUË + OVERHENG-LOOP (§ 11-7(3–5))
+    gjeldende_partier = four_percent_parties.copy()
+
+    while True:
+        # 4a) Summer distriktsmandater vunnet av partier som IKKE er i gjeldende_partier
+        under4_partier = [p for p in all_votes.index if p not in gjeldende_partier]
+        under4_distrikt_sum = int(district_mandates_full.reindex(under4_partier, fill_value=0).sum())
+
+        # 4b) Antall nasjonale seter som gjenstår til gjeldende_partier
+        total_national_seats = 169 - under4_distrikt_sum
+        if total_national_seats <= 0:
+            st.error("Alle nasjonale seter er opptatt av under 4 %-partier. Ingen utjevningsmandater.")
+            return pd.DataFrame(columns=['Distrikt', 'Parti', 'Utjevningsmandater'])
+
+        # 4c) Stemmetall kun for gjeldende_partier, sortert alfabetisk
+        votes_4pct = all_votes.loc[gjeldende_partier].sort_index()
+
+        # 4d) Nasjonal Sainte-Laguë på total_national_seats seter
+        nasjonalt_array = adjusted_sainte_lague(
+            votes_4pct.values,
+            seats=total_national_seats,
+            first_divisor=1.4
+        )
+        nasjonalt_df = pd.DataFrame({
+            'Parti': votes_4pct.index,
+            'Mandater': nasjonalt_array
+        }).set_index('Parti')
+
+        # 4e) Hvor mange distriktsmandater vant hver av gjeldende_partier?
+        district_mandates_4pct = district_mandates_full.reindex(gjeldende_partier, fill_value=0)
+
+        # 4f) Overheng-sjekk: dersom noen har distriktsmandater > nasjanalt tildelte, fjern dem
+        overhang = [
+            P for P in gjeldende_partier
+            if district_mandates_4pct[P] > nasjonalt_df.loc[P, 'Mandater']
+        ]
+
+        if not overhang:
+            break
+
+        for P in overhang:
+            st.info(
+                f"Parti {P} fjernes fra utjevning (overheng: "
+                f"{int(district_mandates_4pct[P])} distriktsmandater > "
+                f"{int(nasjonalt_df.loc[P, 'Mandater'])} nasjonale mandater)."
+            )
+            gjeldende_partier.remove(P)
+
+        if not gjeldende_partier:
+            return pd.DataFrame(columns=['Distrikt', 'Parti', 'Utjevningsmandater'])
+
+    # 5) BEREGN ENDLIG UTJEVNINGSBEHOV = nasjonalt_df[P] − district_mandates_4pct[P]
+    leveling_needs = {
+        P: int(nasjonalt_df.loc[P, 'Mandater']) - int(district_mandates_4pct[P])
+        for P in nasjonalt_df.index
+    }
+
+    total_needs = sum(leveling_needs.values())
+    if total_needs != 19:
+        st.error(
+            f"Feil i utjevningsberegningen: Summen av behovene er {total_needs}, "
+            "men skal være 19 i henhold til § 11-7."
+        )
+        return pd.DataFrame(columns=['Distrikt', 'Parti', 'Utjevningsmandater'])
+
+    # 6) FOR DYNAMISK FYLKESVIS UTVEILNGSMANDAT-TILDELING
+    #    a) Total stemmetall per fylke
+    total_stemmer_per_fylke = {
+        D: real_data[real_data['Distrikt'] == D]['Stemmer'].sum()
+        for D in fylker
+    }
+    #    b) Antall distriktsmandater i hvert fylke
+    distriktsmandater_map = {
+        row['Fylke']: int(row['Distriktmandater'])
+        for _, row in fixed_districts.iterrows()
+    }
+    #    c) Hvor mange distriktsmandater hvert parti har i hvert fylke
+    per_district_df = calculate_district_mandates(real_data, fixed_districts)
+    district_mandates_by_PD = {
+        (P, D): int(per_district_df.at[D, P])
+        for P in per_district_df.columns
+        for D in per_district_df.index
+    }
+
+    # 7) DEL UT 19 UTVEVNINGSMANDATER ÉN‐FOR‐ÉN (maks én per fylke, aldri mer enn behov per parti)
     used_districts = set()
-    total_levelling_mandates_needed = 19
-    max_loops = 1000
-    i = 0
+    levelling_list = []
 
-    while len(levelling_mandates) < total_levelling_mandates_needed and eligible_parties and i < max_loops:
-        best_value = 0
-        best_party = None
-        best_district = None
-        parties_to_remove = []
-        i += 1
+    while sum(leveling_needs.values()) > 0:
+        best_value = -1
+        best_P = None
+        best_D = None
 
-        for _, district_row in fixed_districts.iterrows():
-            if len(levelling_mandates) >= total_levelling_mandates_needed:
-                break
-
-            district = district_row['Fylke']
-            if district in used_districts:
+        for D in fylker:
+            if D in used_districts:
                 continue
+            d_D = total_stemmer_per_fylke[D] / distriktsmandater_map[D]
 
-            district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
-            district_factor = district_votes.sum() / district_row['Distriktmandater']
-
-            for party_name in eligible_parties:
-                if party_name not in district_votes:
+            for P, behov in leveling_needs.items():
+                if behov <= 0:
                     continue
+                m_PD = district_mandates_by_PD.get((P, D), 0)
+                v_PD = real_data[
+                    (real_data['Parti'] == P) & (real_data['Distrikt'] == D)
+                ]['Stemmer'].sum()
 
-                current_district_mandates = data_input[
-                    (data_input['Parti'] == party_name) & (data_input['Distrikt'] == district)
-                ]['Distriktmandater'].sum()
-
-                if current_district_mandates == 0:
-                    current_value = district_votes[party_name] / district_factor
-                else:
-                    current_value = district_votes[party_name] / ((2 * current_district_mandates + 1) * district_factor)
-
+                # Sainte‐Laguë‐kvotient for neste mandat i (P, D)
+                current_value = v_PD / (d_D * (2*m_PD + 1))
                 if current_value > best_value:
                     best_value = current_value
-                    best_party = party_name
-                    best_district = district
+                    best_P = P
+                    best_D = D
 
-        if best_party and best_district:
-            levelling_mandates.append({
-                'Distrikt': best_district,
-                'Parti': best_party,
+        if best_P is not None and best_D is not None:
+            levelling_list.append({
+                'Distrikt': best_D,
+                'Parti': best_P,
                 'Utjevningsmandater': 1
             })
-            district_mandates[best_party] += 1
-            mandates_needed[best_party] -= 1
-            used_districts.add(best_district)
+            st.info(f"Utjevningsmandat {len(levelling_list)}/19: Parti {best_P} tildeles i fylke {best_D}.")
+            leveling_needs[best_P] -= 1
+            used_districts.add(best_D)
+            district_mandates_by_PD[(best_P, best_D)] = district_mandates_by_PD.get((best_P, best_D), 0) + 1
+        else:
+            break
 
-            if mandates_needed[best_party] <= 0:
-                parties_to_remove.append(best_party)
-
-            eligible_parties = [p for p in eligible_parties if p not in parties_to_remove]
-
-    if len(levelling_mandates) < total_levelling_mandates_needed:
-        st.info(
-            f"Hovedfordeling delte ut {len(levelling_mandates)} av {total_levelling_mandates_needed} utjevningsmandater. "
-            "I denne runden fikk hvert fylke maksimalt ett mandat."
-        )
-        st.info(
-            "Nå fortsetter fallback-runden: De resterende mandatene blir tildelt "
-            "blant partier med gjenværende behov (over sperregrensen), i fylker som "
-            "ennå ikke har mottatt utjevningsmandat."
-        )
-
-        while len(levelling_mandates) < total_levelling_mandates_needed:
-            best_value = 0
-            best_party = None
-            best_district = None
-
-            for _, district_row in fixed_districts.iterrows():
-                district = district_row['Fylke']
-                if district in used_districts:
-                    continue
-
-                district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
-                district_factor = district_votes.sum() / district_row['Distriktmandater']
-
-                for party_name in parties_above_threshold:
-                    if party_name not in district_votes:
-                        continue
-
-                    current_district_mandates = data_input[
-                        (data_input['Parti'] == party_name) & (data_input['Distrikt'] == district)
-                    ]['Distriktmandater'].sum()
-
-                    if current_district_mandates == 0:
-                        current_value = district_votes[party_name] / district_factor
-                    else:
-                        current_value = district_votes[party_name] / ((2 * current_district_mandates + 1) * district_factor)
-
-                    if current_value > best_value:
-                        best_value = current_value
-                        best_party = party_name
-                        best_district = district
-
-            if best_party and best_district:
-                levelling_mandates.append({
-                    'Distrikt': best_district,
-                    'Parti': best_party,
-                    'Utjevningsmandater': 1
-                })
-                district_mandates[best_party] += 1
-                mandates_needed[best_party] -= 1
-                used_districts.add(best_district)
-
-                if mandates_needed[best_party] <= 0 and best_party in parties_above_threshold:
-                    parties_above_threshold.remove(best_party)
-
+    # 8) MELDINGER OG RETUR
     antall_fylker = len(used_districts)
-    if antall_fylker < total_levelling_mandates_needed:
+    if antall_fylker < 19:
         st.success(
-            f"Totalt ble 19 utjevningsmandater delt ut. "
-            f"{antall_fylker} ulike fylker mottok minst ett mandat, "
-            "ettersom noen fylker fikk to i denne simuleringen."
+            f"Totalt ble {len(levelling_list)} utjevningsmandater delt ut. "
+            f"{antall_fylker} fylker har minst ett mandat."
         )
-    elif antall_fylker == total_levelling_mandates_needed:
+    else:
         st.success(
             "Totalt ble 19 utjevningsmandater delt ut, fordelt på 19 ulike fylker "
             "(ingen fylke fikk mer enn ett mandat)."
         )
-    else:
-        st.error(
-            f"Feil: Det ser ut til at {antall_fylker} fylker har fått utjevningsmandat, "
-            "noe som er over 19. Sjekk tilbake i beregningen."
-        )
 
-    return pd.DataFrame(levelling_mandates)
+    return pd.DataFrame(levelling_list)
+
+
+
+
 
 
 
