@@ -59,4 +59,4 @@ Dette prosjektet er lisensiert under [MIT-lisensen](https://opensource.org/licen
 
 Har du spørsmål eller tilbakemeldinger? Kontakt meg gjerne gjennom [GitHub-profilen min](https://github.com/albertovth).
 
-Takk for at du bruker Stortingsvalgsimulatoren, og lykke til med simuleringene!
+Takk for at du bruker Stortingsvalgsimulatoren, og lykke til med simuleringene.
