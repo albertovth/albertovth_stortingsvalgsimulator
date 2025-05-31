@@ -792,12 +792,17 @@ def national_seats(votes, total_seats, first_divisor=1.4):
     return seat_allocation
 
 def distribute_levelling_mandates(data_input, fixed_districts, national_result, threshold=0.04):
+    import streamlit as st
+    import pandas as pd
+
     votes_per_party = data_input.groupby('Parti')['Stemmer'].sum().reset_index().sort_values(by='Parti')
     votes = votes_per_party['Stemmer'].values
+    total_votes = votes.sum()
+
     parties_above_threshold = [
         votes_per_party['Parti'].iloc[i]
         for i in range(len(votes))
-        if votes[i] / sum(votes) >= threshold
+        if votes[i] / total_votes >= threshold
     ]
 
     district_mandates = data_input.groupby('Parti')['Distriktmandater'].sum().reindex(
@@ -810,9 +815,12 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
     }).set_index('Parti')
 
     mandates_needed = national_result_df['Mandater'] - district_mandates
-    eligible_parties = mandates_needed[
-        (mandates_needed > 0) & (mandates_needed.index.isin(parties_above_threshold))
-    ].index.tolist()
+
+    eligible_parties = [
+        parti
+        for parti in parties_above_threshold
+        if mandates_needed.get(parti, 0) > 0
+    ]
 
     levelling_mandates = []
     used_districts = set()
@@ -820,7 +828,6 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
     max_loops = 1000
     i = 0
 
-    # Hovedfordeling
     while len(levelling_mandates) < total_levelling_mandates_needed and eligible_parties and i < max_loops:
         best_value = 0
         best_party = None
@@ -872,23 +879,16 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
 
             eligible_parties = [p for p in eligible_parties if p not in parties_to_remove]
 
-    # Om hovedfordeling ikke klarte alle 19, vis info og fallback
     if len(levelling_mandates) < total_levelling_mandates_needed:
         st.info(
-            f"Hovedfordeling tildelte {len(levelling_mandates)} av {total_levelling_mandates_needed} utjevningsmandater "
-            f"til partier over sperregrensen som manglet mandater i henhold til sitt nasjonale resultat."
+            f"Hovedfordeling delte ut {len(levelling_mandates)} av {total_levelling_mandates_needed} utjevningsmandater. "
+            "I denne runden fikk hvert fylke maksimalt ett mandat."
         )
-
-        if i >= max_loops:
-            st.error(
-                "Fordelingen ble avbrutt etter 1000 forsøk – det kan tyde på at for mange distrikter allerede er brukt "
-                "eller at partier ikke kan tildeles mandat i noen gjenværende fylker. Sjekk inputdata og sperregrense."
-            )
-        else:
-            st.warning(
-                "Etter at alle partier som trengte utjevningsmandater i henhold til nasjonalt resultat har fått nødvendige mandater, "
-                "ble resterende tildelt til partier over sperregrensen med tilstrekkelig stemmetall i ledige fylker."
-            )
+        st.info(
+            "Nå fortsetter fallback-runden: De resterende mandatene blir tildelt "
+            "blant partier med gjenværende behov (over sperregrensen), i fylker som "
+            "ennå ikke har mottatt utjevningsmandat."
+        )
 
         while len(levelling_mandates) < total_levelling_mandates_needed:
             best_value = 0
@@ -934,9 +934,27 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
                 if mandates_needed[best_party] <= 0 and best_party in parties_above_threshold:
                     parties_above_threshold.remove(best_party)
 
-    st.success(f"Totalt ble {len(levelling_mandates)} utjevningsmandater tildelt, fordelt på {len(used_districts)} fylker.")
+    antall_fylker = len(used_districts)
+    if antall_fylker < total_levelling_mandates_needed:
+        st.success(
+            f"Totalt ble 19 utjevningsmandater delt ut. "
+            f"{antall_fylker} ulike fylker mottok minst ett mandat, "
+            "ettersom noen fylker fikk to i denne simuleringen."
+        )
+    elif antall_fylker == total_levelling_mandates_needed:
+        st.success(
+            "Totalt ble 19 utjevningsmandater delt ut, fordelt på 19 ulike fylker "
+            "(ingen fylke fikk mer enn ett mandat)."
+        )
+    else:
+        st.error(
+            f"Feil: Det ser ut til at {antall_fylker} fylker har fått utjevningsmandat, "
+            "noe som er over 19. Sjekk tilbake i beregningen."
+        )
 
     return pd.DataFrame(levelling_mandates)
+
+
 
 def calculate_district_mandates(data_input, fixed_districts):
     districts = fixed_districts['Fylke'].unique()
