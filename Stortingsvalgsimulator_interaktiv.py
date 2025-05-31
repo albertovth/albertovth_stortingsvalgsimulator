@@ -688,6 +688,19 @@ st.write("[Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0)")
 percentage_dict = {}
 participation_dict = {}
 
+def validate_percentage_sums(percentage_dict, districts, partier):
+    issues_found = False
+    for distrikt in districts:
+        total = sum([
+            float(percentage_dict.get((parti, distrikt), '0%').strip('%'))
+            for parti in partier
+        ])
+        if abs(total - 100.0) > 0.1:
+            st.warning(f"Prosentene i {distrikt} summerer til {total:.2f}% – ikke 100%.")
+            issues_found = True
+    if not issues_found:
+        st.success("Alle distriktsprosentene summerer til 100 % ± 0.1 %.")
+
 
 st.sidebar.header("Her kan du endre prosent")
 for distrikt in districts:
@@ -706,18 +719,11 @@ for distrikt in districts:
         modified_participation = st.sidebar.slider(f"Deltagelse ({distrikt})", 0.0, 100.0, default_participation)
         participation_dict[distrikt] = f"{modified_participation}%"
 
-def validate_percentage_sums(percentage_dict, districts, partier):
-    issues_found = False
-    for distrikt in districts:
-        total = sum([
-            float(percentage_dict.get((parti, distrikt), '0%').strip('%'))
-            for parti in partier
-        ])
-        if abs(total - 100.0) > 0.1:
-            st.warning(f"Prosentene i {distrikt} summerer til {total:.2f}% – ikke 100%.")
-            issues_found = True
-    if not issues_found:
-        st.success("Alle distriktsprosentene summerer til 100 % ± 0.1 %.")
+ekte_partier = [p for p in df['Parti'] if p not in 
+                 ['Prognostisert valgoppslutning per fylke - godkjente stemmer', 
+                  'Personer med stemmerett 2025']]
+validate_percentage_sums(percentage_dict, districts, ekte_partier)
+
 
 def validate_used_districts(used_districts):
     if len(used_districts) > 19:
@@ -741,7 +747,7 @@ def calculate_stemmer(row, percentage_dict, participation_dict):
             stemmer_data.append(np.nan)
     return stemmer_data
 results = {'Parti': [], 'Distrikt': [], 'Stemmer': [], 'Kategori': []}
-validate_percentage_sums(percentage_dict, districts, df['Parti'].unique())
+
 for index, row in df.iterrows():
     if row['Parti'] not in ['Prognostisert valgoppslutning per fylke - godkjente stemmer', 'Personer med stemmerett 2025']:
         stemmer_data = calculate_stemmer(row, percentage_dict, participation_dict)
