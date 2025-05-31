@@ -764,38 +764,41 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
     votes_per_party = data_input.groupby('Parti')['Stemmer'].sum().reset_index().sort_values(by='Parti')
     votes = votes_per_party['Stemmer'].values
     parties_above_threshold = [votes_per_party['Parti'].iloc[i] for i in range(len(votes)) if votes[i] / sum(votes) >= threshold]
-    
+
     district_mandates = data_input.groupby('Parti')['Distriktmandater'].sum().reindex(votes_per_party['Parti'], fill_value=0)
-    
+
     national_result_df = pd.DataFrame({
         'Parti': votes_per_party['Parti'],
         'Mandater': national_result
     }).set_index('Parti')
-    
+
     mandates_needed = national_result_df['Mandater'] - district_mandates
     eligible_parties = mandates_needed[(mandates_needed > 0) & (mandates_needed.index.isin(parties_above_threshold))].index.tolist()
-    
+
     levelling_mandates = []
     used_districts = set()
     total_levelling_mandates_needed = 19
-    
-    while len(levelling_mandates) < total_levelling_mandates_needed and eligible_parties:
+    max_loops = 1000
+    i = 0
+
+    while len(levelling_mandates) < total_levelling_mandates_needed and eligible_parties and i < max_loops:
         best_value = 0
         best_party = None
         best_district = None
         parties_to_remove = []
-        
+        i += 1
+
         for district_index, district_row in fixed_districts.iterrows():
             if len(levelling_mandates) >= total_levelling_mandates_needed:
                 break
-            
+
             district = district_row['Fylke']
             if district in used_districts:
                 continue
-            
+
             district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
             district_factor = district_votes.sum() / district_row['Distriktmandater']
-            
+
             for party_name in eligible_parties:
                 if party_name not in district_votes:
                     continue
@@ -816,35 +819,42 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
             district_mandates[best_party] += 1
             mandates_needed[best_party] -= 1
             used_districts.add(best_district)
-            
+
             if mandates_needed[best_party] <= 0:
                 parties_to_remove.append(best_party)
-                
+
             eligible_parties = [party for party in eligible_parties if party not in parties_to_remove]
-    
+
+    # Outside the loop: check whether we exited early
+    if len(levelling_mandates) < total_levelling_mandates_needed:
+        if i >= max_loops:
+            st.error("Avbrøt etter 1000 løkker – sjekk fordelingslogikken eller inputdata.")
+        else:
+            st.warning("Kunne ikke tildele alle 19 utjevningsmandater. Kontroller inputdata.")
+
     while len(levelling_mandates) < total_levelling_mandates_needed:
         best_value = 0
         best_party = None
         best_district = None
-        
+
         for district_index, district_row in fixed_districts.iterrows():
             district = district_row['Fylke']
             if district in used_districts:
                 continue
-            
+
             district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
             district_factor = district_votes.sum() / district_row['Distriktmandater']
-            
+
             for party_name in parties_above_threshold:
                 if party_name not in district_votes:
                     continue
-                
+
                 current_district_mandates = data_input[(data_input['Parti'] == party_name) & (data_input['Distrikt'] == district)]['Distriktmandater'].sum()
                 if current_district_mandates == 0:
                     current_value = district_votes[party_name] / district_factor
                 else:
                     current_value = district_votes[party_name] / ((2 * current_district_mandates + 1) * district_factor)
-                
+
                 if current_value > best_value:
                     best_value = current_value
                     best_party = party_name
@@ -855,7 +865,10 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
             district_mandates[best_party] += 1
             mandates_needed[best_party] -= 1
             used_districts.add(best_district)
-    
+
+            if mandates_needed[best_party] <= 0 and best_party in parties_above_threshold:
+                parties_above_threshold.remove(best_party)
+
     return pd.DataFrame(levelling_mandates)
 
 
