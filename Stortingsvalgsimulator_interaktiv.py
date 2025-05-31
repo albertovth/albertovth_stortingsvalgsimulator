@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.transforms import Affine2D
 st.set_page_config(layout="wide")
+
+
 default_values = {
   "Parti": [
     "Ap",
@@ -33,7 +35,7 @@ default_values = {
     "PF",
     "FI",
     "Prognostisert valgoppslutning per fylke - godkjente stemmer",
-    "Personer med stemmerett 2021"
+    "Personer med stemmerett 2025"
   ],
   "Kategori": [
     4,
@@ -640,7 +642,7 @@ df = pd.DataFrame(default_values)
 
 districts = [col for col in df.columns if col not in ['Parti', 'Kategori']]
 email_address = "alberto@vthoresen.no"
-import streamlit as st
+
 
 st.title("Stortingsvalgsimulator")
 
@@ -685,28 +687,49 @@ st.write("[Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0)")
 
 percentage_dict = {}
 participation_dict = {}
+
+
 st.sidebar.header("Her kan du endre prosent")
 for distrikt in districts:
-    if distrikt not in ['Prognostisert valgoppslutning per fylke - godkjente stemmer', 'Personer med stemmerett 2021']:
+    if distrikt not in ['Prognostisert valgoppslutning per fylke - godkjente stemmer', 'Personer med stemmerett 2025']:
         st.sidebar.subheader(distrikt)
         for index, row in df.iterrows():
-            if row['Parti'] not in ['Prognostisert valgoppslutning per fylke - godkjente stemmer', 'Personer med stemmerett 2021']:
+            if row['Parti'] not in ['Prognostisert valgoppslutning per fylke - godkjente stemmer', 'Personer med stemmerett 2025']:
                 default_percentage = float(row[distrikt].strip('%'))
                 modified_percentage = st.sidebar.slider(f"{row['Parti']} ({distrikt})", 0.0, 100.0, default_percentage)
                 percentage_dict[(row['Parti'], distrikt)] = f"{modified_percentage}%"
 st.sidebar.header("Her kan du endre deltagelse")
 for distrikt in districts:
-    if distrikt not in ['Personer med stemmerett 2021']:
+    if distrikt not in ['Personer med stemmerett 2025']:
         participation_row = df[df['Parti'] == 'Prognostisert valgoppslutning per fylke - godkjente stemmer']
         default_participation = float(participation_row[distrikt].values[0].strip('%'))
         modified_participation = st.sidebar.slider(f"Deltagelse ({distrikt})", 0.0, 100.0, default_participation)
         participation_dict[distrikt] = f"{modified_participation}%"
+
+def validate_percentage_sums(percentage_dict, districts, partier):
+    issues_found = False
+    for distrikt in districts:
+        total = sum([
+            float(percentage_dict.get((parti, distrikt), '0%').strip('%'))
+            for parti in partier
+        ])
+        if abs(total - 100.0) > 0.1:
+            st.warning(f"Prosentene i {distrikt} summerer til {total:.2f}% – ikke 100%.")
+            issues_found = True
+    if not issues_found:
+        st.success("Alle distriktsprosentene summerer til 100 % ± 0.1 %.")
+
+def validate_used_districts(used_districts):
+    if len(used_districts) > 19:
+        st.error(f"Flere enn 19 fylker har fått utjevningsmandater: {len(used_districts)}. Dette bryter med valgloven.")
+    else:
+        st.info(f"{len(used_districts)} fylker har fått utjevningsmandat, som forventet.")
 def calculate_stemmer(row, percentage_dict, participation_dict):
     stemmer_data = []
     for distrikt in districts:
         percentage = percentage_dict.get((row['Parti'], distrikt), row[distrikt])
         valgdeltakelse = participation_dict.get(distrikt, df[df['Parti'] == 'Prognostisert valgoppslutning per fylke - godkjente stemmer'][distrikt].values[0])
-        personer_med_stemmerett = df[df['Parti'] == 'Personer med stemmerett 2021'][distrikt].values[0]
+        personer_med_stemmerett = df[df['Parti'] == 'Personer med stemmerett 2025'][distrikt].values[0]
         
         if pd.notna(percentage) and pd.notna(valgdeltakelse) and pd.notna(personer_med_stemmerett):
             percentage_value = float(percentage.strip('%')) / 100
@@ -718,9 +741,11 @@ def calculate_stemmer(row, percentage_dict, participation_dict):
             stemmer_data.append(np.nan)
     return stemmer_data
 results = {'Parti': [], 'Distrikt': [], 'Stemmer': [], 'Kategori': []}
+validate_percentage_sums(percentage_dict, districts, df['Parti'].unique())
 for index, row in df.iterrows():
-    if row['Parti'] not in ['Prognostisert valgoppslutning per fylke - godkjente stemmer', 'Personer med stemmerett 2021']:
+    if row['Parti'] not in ['Prognostisert valgoppslutning per fylke - godkjente stemmer', 'Personer med stemmerett 2025']:
         stemmer_data = calculate_stemmer(row, percentage_dict, participation_dict)
+        
         for distrikt, stemmer in zip(districts, stemmer_data):
             results['Parti'].append(row['Parti'])
             results['Distrikt'].append(distrikt)
@@ -763,9 +788,15 @@ def national_seats(votes, total_seats, first_divisor=1.4):
 def distribute_levelling_mandates(data_input, fixed_districts, national_result, threshold=0.04):
     votes_per_party = data_input.groupby('Parti')['Stemmer'].sum().reset_index().sort_values(by='Parti')
     votes = votes_per_party['Stemmer'].values
-    parties_above_threshold = [votes_per_party['Parti'].iloc[i] for i in range(len(votes)) if votes[i] / sum(votes) >= threshold]
+    parties_above_threshold = [
+        votes_per_party['Parti'].iloc[i]
+        for i in range(len(votes))
+        if votes[i] / sum(votes) >= threshold
+    ]
 
-    district_mandates = data_input.groupby('Parti')['Distriktmandater'].sum().reindex(votes_per_party['Parti'], fill_value=0)
+    district_mandates = data_input.groupby('Parti')['Distriktmandater'].sum().reindex(
+        votes_per_party['Parti'], fill_value=0
+    )
 
     national_result_df = pd.DataFrame({
         'Parti': votes_per_party['Parti'],
@@ -773,7 +804,9 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
     }).set_index('Parti')
 
     mandates_needed = national_result_df['Mandater'] - district_mandates
-    eligible_parties = mandates_needed[(mandates_needed > 0) & (mandates_needed.index.isin(parties_above_threshold))].index.tolist()
+    eligible_parties = mandates_needed[
+        (mandates_needed > 0) & (mandates_needed.index.isin(parties_above_threshold))
+    ].index.tolist()
 
     levelling_mandates = []
     used_districts = set()
@@ -781,6 +814,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
     max_loops = 1000
     i = 0
 
+    # Hovedfordeling
     while len(levelling_mandates) < total_levelling_mandates_needed and eligible_parties and i < max_loops:
         best_value = 0
         best_party = None
@@ -788,7 +822,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
         parties_to_remove = []
         i += 1
 
-        for district_index, district_row in fixed_districts.iterrows():
+        for _, district_row in fixed_districts.iterrows():
             if len(levelling_mandates) >= total_levelling_mandates_needed:
                 break
 
@@ -803,7 +837,10 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
                 if party_name not in district_votes:
                     continue
 
-                current_district_mandates = data_input[(data_input['Parti'] == party_name) & (data_input['Distrikt'] == district)]['Distriktmandater'].sum()
+                current_district_mandates = data_input[
+                    (data_input['Parti'] == party_name) & (data_input['Distrikt'] == district)
+                ]['Distriktmandater'].sum()
+
                 if current_district_mandates == 0:
                     current_value = district_votes[party_name] / district_factor
                 else:
@@ -815,7 +852,11 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
                     best_district = district
 
         if best_party and best_district:
-            levelling_mandates.append({'Distrikt': best_district, 'Parti': best_party, 'Utjevningsmandater': 1})
+            levelling_mandates.append({
+                'Distrikt': best_district,
+                'Parti': best_party,
+                'Utjevningsmandater': 1
+            })
             district_mandates[best_party] += 1
             mandates_needed[best_party] -= 1
             used_districts.add(best_district)
@@ -823,68 +864,95 @@ def distribute_levelling_mandates(data_input, fixed_districts, national_result, 
             if mandates_needed[best_party] <= 0:
                 parties_to_remove.append(best_party)
 
-            eligible_parties = [party for party in eligible_parties if party not in parties_to_remove]
+            eligible_parties = [p for p in eligible_parties if p not in parties_to_remove]
 
-    # Outside the loop: check whether we exited early
+    # Om hovedfordeling ikke klarte alle 19, vis info og fallback
     if len(levelling_mandates) < total_levelling_mandates_needed:
+        st.info(
+            f"Hovedfordeling tildelte {len(levelling_mandates)} av {total_levelling_mandates_needed} utjevningsmandater "
+            f"til partier over sperregrensen som manglet mandater i henhold til sitt nasjonale resultat."
+        )
+
         if i >= max_loops:
-            st.error("Avbrøt etter 1000 løkker – sjekk fordelingslogikken eller inputdata.")
+            st.error(
+                "Fordelingen ble avbrutt etter 1000 forsøk – det kan tyde på at for mange distrikter allerede er brukt "
+                "eller at partier ikke kan tildeles mandat i noen gjenværende fylker. Sjekk inputdata og sperregrense."
+            )
         else:
-            st.warning("Kunne ikke tildele alle 19 utjevningsmandater. Kontroller inputdata.")
+            st.warning(
+                "Etter at alle partier som trengte utjevningsmandater i henhold til nasjonalt resultat har fått nødvendige mandater, "
+                "ble resterende tildelt til partier over sperregrensen med tilstrekkelig stemmetall i ledige fylker."
+            )
 
-    while len(levelling_mandates) < total_levelling_mandates_needed:
-        best_value = 0
-        best_party = None
-        best_district = None
+        while len(levelling_mandates) < total_levelling_mandates_needed:
+            best_value = 0
+            best_party = None
+            best_district = None
 
-        for district_index, district_row in fixed_districts.iterrows():
-            district = district_row['Fylke']
-            if district in used_districts:
-                continue
-
-            district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
-            district_factor = district_votes.sum() / district_row['Distriktmandater']
-
-            for party_name in parties_above_threshold:
-                if party_name not in district_votes:
+            for _, district_row in fixed_districts.iterrows():
+                district = district_row['Fylke']
+                if district in used_districts:
                     continue
 
-                current_district_mandates = data_input[(data_input['Parti'] == party_name) & (data_input['Distrikt'] == district)]['Distriktmandater'].sum()
-                if current_district_mandates == 0:
-                    current_value = district_votes[party_name] / district_factor
-                else:
-                    current_value = district_votes[party_name] / ((2 * current_district_mandates + 1) * district_factor)
+                district_votes = data_input[data_input['Distrikt'] == district].set_index('Parti')['Stemmer']
+                district_factor = district_votes.sum() / district_row['Distriktmandater']
 
-                if current_value > best_value:
-                    best_value = current_value
-                    best_party = party_name
-                    best_district = district
+                for party_name in parties_above_threshold:
+                    if party_name not in district_votes:
+                        continue
 
-        if best_party and best_district:
-            levelling_mandates.append({'Distrikt': best_district, 'Parti': best_party, 'Utjevningsmandater': 1})
-            district_mandates[best_party] += 1
-            mandates_needed[best_party] -= 1
-            used_districts.add(best_district)
+                    current_district_mandates = data_input[
+                        (data_input['Parti'] == party_name) & (data_input['Distrikt'] == district)
+                    ]['Distriktmandater'].sum()
 
-            if mandates_needed[best_party] <= 0 and best_party in parties_above_threshold:
-                parties_above_threshold.remove(best_party)
+                    if current_district_mandates == 0:
+                        current_value = district_votes[party_name] / district_factor
+                    else:
+                        current_value = district_votes[party_name] / ((2 * current_district_mandates + 1) * district_factor)
+
+                    if current_value > best_value:
+                        best_value = current_value
+                        best_party = party_name
+                        best_district = district
+
+            if best_party and best_district:
+                levelling_mandates.append({
+                    'Distrikt': best_district,
+                    'Parti': best_party,
+                    'Utjevningsmandater': 1
+                })
+                district_mandates[best_party] += 1
+                mandates_needed[best_party] -= 1
+                used_districts.add(best_district)
+
+                if mandates_needed[best_party] <= 0 and best_party in parties_above_threshold:
+                    parties_above_threshold.remove(best_party)
+
+    st.success(f"Totalt ble {len(levelling_mandates)} utjevningsmandater tildelt, fordelt på {len(used_districts)} fylker.")
 
     return pd.DataFrame(levelling_mandates)
 
-
 def calculate_district_mandates(data_input, fixed_districts):
     districts = fixed_districts['Fylke'].unique()
-    district_mandates = pd.DataFrame(index=districts, columns=data_input['Parti'].unique())
+    parties = sorted(data_input['Parti'].unique())
+    district_mandates = pd.DataFrame(index=districts, columns=parties)
+
     for district in districts:
         district_data = data_input[data_input['Distrikt'] == district]
+        district_data = district_data.set_index('Parti').reindex(parties).fillna(0).reset_index()
         votes = district_data['Stemmer'].values
         seats = int(fixed_districts[fixed_districts['Fylke'] == district]['Distriktmandater'].values[0])
+
         if len(votes) == 0:
-            continue  
+            continue
+
         mandates = adjusted_sainte_lague(votes, seats)
-        for i, party in enumerate(district_data['Parti'].unique()):
+        for i, party in enumerate(parties):
             district_mandates.at[district, party] = mandates[i]
+
     return district_mandates.fillna(0).astype(int)
+
+
 def plot_half_circle_chart(data, colors):
     
     aggregated_data = data.groupby(['Parti', 'Kategori']).sum().reset_index()
@@ -978,6 +1046,9 @@ results_df = results_df.merge(district_mandates_df, on=['Distrikt', 'Parti'], ho
 st.write("Data med beregnede 'Distriktmandater':")
 st.write(results_df)
 levelling_mandates_df = distribute_levelling_mandates(results_df, fixed_districts, national_result)
+
+validate_used_districts(set(levelling_mandates_df['Distrikt']))
+
 st.write("Utjevningsmandater per distrikt:")
 st.write(levelling_mandates_df)
 results_df = results_df.merge(levelling_mandates_df, on=['Distrikt', 'Parti'], how='left')
