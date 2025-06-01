@@ -1080,7 +1080,7 @@ national_result_df = pd.DataFrame({
     'Parti': parties,
     'Mandater': national_result
 })
-st.write("Hele landet som valgdistrikt:")
+st.write("Hele landet som valgdistrikt, som referanse (alle partier, inkludert under sperregrensen):")
 st.write(national_result_df)
 district_mandates_df = calculate_district_mandates(results_df, fixed_districts)
 st.write("Distriktmandater:")
