@@ -952,7 +952,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_r
                 'Parti': best_P,
                 'Utjevningsmandater': 1
             })
-            st.info(f"Utjevningsmandat {len(levelling_list)}/19: Parti {best_P} tildeles i fylke {best_D}.")
+            st.info(f"Utjevningsmandat {len(levelling_list)}/19: Parti {best_P} tildeles i valgdistrikt {best_D}.")
             leveling_needs[best_P] -= 1
             used_districts.add(best_D)
             district_mandates_by_PD[(best_P, best_D)] = district_mandates_by_PD.get((best_P, best_D), 0) + 1
