@@ -95,7 +95,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "73.00%",
-    "236306.764"
+    "253307.6879"
   ],
   "Akershus": [
     "30.40%",
@@ -125,7 +125,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "79.10%",
-    "382290.526"
+    "575257.6549"
   ],
   "Oslo": [
     "25.30%",
@@ -155,7 +155,7 @@ default_values = {
     "0.00%",
     "0.04%",
     "78.50%",
-    "519846.1824"
+    "584524.9195"
   ],
   "Hedmark": [
     "38.20%",
@@ -185,7 +185,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "76.10%",
-    "159458.83"
+    "153617.5518"
   ],
   "Oppland": [
     "35.30%",
@@ -215,7 +215,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "75.00%",
-    "139028.6266"
+    "135784.9691"
   ],
   "Buskerud": [
     "30.40%",
@@ -245,7 +245,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "75.20%",
-    "202694.4549"
+    "215155.0977"
   ],
   "Vestfold": [
     "30.70%",
@@ -275,7 +275,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "76.50%",
-    "192054.1617"
+    "206303.9207"
   ],
   "Telemark": [
     "32.60%",
@@ -305,7 +305,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "74.50%",
-    "137369.697"
+    "143335.701"
   ],
   "Aust-Agder": [
     "26.00%",
@@ -335,7 +335,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "75.80%",
-    "92529.27"
+    "89234.99578"
   ],
   "Vest-Agder": [
     "25.00%",
@@ -365,7 +365,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "77.00%",
-    "144490.5126"
+    "142781.2181"
   ],
   "Rogaland": [
     "24.20%",
@@ -395,7 +395,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "78.10%",
-    "354417.23"
+    "385280.2768"
   ],
   "Hordaland": [
     "26.60%",
@@ -425,7 +425,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "79.90%",
-    "405549.144"
+    "390765.9137"
   ],
   "Sogn og Fjordane": [
     "32.50%",
@@ -455,7 +455,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "79.70%",
-    "81742.0644"
+    "80180.74172"
   ],
   "Møre og Romsdal": [
     "23.70%",
@@ -485,7 +485,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "77.60%",
-    "202879.473"
+    "214397.6262"
   ],
   "Sør-Trøndelag": [
     "32.60%",
@@ -515,7 +515,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "78.50%",
-    "261366.4574"
+    "254791.2953"
   ],
   "Nord-Trøndelag": [
     "36.10%",
@@ -545,7 +545,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "76.60%",
-    "105287.4756"
+    "103712.1311"
   ],
   "Nordland": [
     "31.60%",
@@ -575,7 +575,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "74.20%",
-    "190577.9025"
+    "193594.7376"
   ],
   "Troms": [
     "34.00%",
@@ -605,7 +605,7 @@ default_values = {
     "0.00%",
     "0.00%",
     "75.00%",
-    "128763.672"
+    "136080.2759"
   ],
   "Finnmark": [
     "31.10%",
@@ -635,7 +635,7 @@ default_values = {
     "11.41%",
     "0.00%",
     "72.00%",
-    "57862.6368"
+    "59382.5883"
   ]
 }
 df = pd.DataFrame(default_values)
@@ -675,14 +675,15 @@ Merk også at kategorien "Andre" i Poll of polls omfatter flere partier. Dette f
 st.markdown("### Diagram og simulering")
 st.markdown("Juster prognoser for valgresultater for valgdistriktene i venstremenyen. Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen. \n"
             "Utgangspunktet baseres på raden 'Siste lokale måling' som publiseres i [Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), "
-            "siste oppdatering per 28. mai 2025, med befolkningsprognoser for 2025 per valgdistrikt fra SSB. Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
+            "siste oppdatering per 28. mai 2025, med estimater for antall personer med stemmerett per valgdistrikt basert på tall for 2023 og ekstrapolering av befolkningsvekst (kilde SSB). Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
             "Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier), fra Poll of polls (Dvs. mindre partier, som ikke er R, SV, Ap, Sp, MDG, V, KrF, H og Frp) fordeles proporsjonelt til andre partier som deltok i Stortingsvalget 2021, basert på resultatet disse partiene fikk da. Du kan justere prosent for disse partiene, eller oppdatere prosenten til de store partiene i venstremenyen. For bedre resultater sørg for at prosentandel for alle partier i valgdistriktet summerer 100 prosent.")
 
 
 # Kilder
 st.markdown("### Kilder")
-st.write("[Befolkningsprognosene fra SSB finner du her](https://www.ssb.no/en/befolkning/befolkningsframskrivinger/artikler/norways-2022-national-population-projections/_/attachment/inline/37d9dfef-1cd6-4390-b6ab-1601e21b32a8:1061870b3633187b8e861856f85e2dcc6638f666/RAPP2022-28_nasjfram%20ENG.pdf)")
-st.write("[Tabeller for befolkningsvekst etter valgdistrikt](https://www.ssb.no/befolkning/befolkningsframskrivinger)")
+st.write("[Tall fra SSB for personer med stemmerett i 2023 finner du her](https://www.ssb.no/statbank/table/12638/tableViewLayout1/)")
+st.write("[Tall fra SSB for personer med stemmerett i 2021 finner du her](https://www.ssb.no/statbank/table/09839/tableViewLayout1/)")
+st.write("[Tall fra SSB for å beregne befolkningsvekst per valgdistrikt](https://www.ssb.no/statbank/table/06913)")
 st.write("[Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0)")
 
 percentage_dict = {}
