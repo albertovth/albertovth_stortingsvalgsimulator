@@ -1145,3 +1145,177 @@ st.markdown(f"**Borgerlige: {borgerlige_mandater} mandater**")
 
 
 plot_half_circle_chart(aggregated_data, color_mapping)
+
+import geopandas as gpd
+from shapely.geometry import Point
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+
+geojson_path = "https://raw.githubusercontent.com/albertovth/albertovth_stortingsvalgsimulator/main/data/Basisdata_0000_Norge_4258_Valgdistrikter_GeoJSON.geojson"
+gdf = gpd.read_file(geojson_path)
+gdf = gdf.to_crs(epsg=4258)
+
+# Normalize district names in map
+gdf['valgdistriktsnavn'] = gdf['valgdistriktsnavn'].replace({
+    'Finnmark – Finnmárku – Finmarkku': 'Finnmark',
+    'Troms – Romsa – Tromssa': 'Troms',
+    'Nordland – Nordlánnda': 'Nordland'
+})
+
+def create_matrix_dots(results_df, gdf, max_cols=6, margin_ratio=0.2):
+    all_dots = []
+    preferred_order = ["R", "SV", "Ap", "Sp", "MDG", "V", "KrF", "H", "FrP"]
+
+    for district_name in results_df['Distrikt'].unique():
+        geom_row = gdf[gdf['valgdistriktsnavn'] == district_name]
+        if geom_row.empty:
+            continue
+
+        geom = geom_row.geometry.values[0]
+        centroid = geom.centroid
+        x0, y0 = centroid.x, centroid.y
+
+        # Special shift for selected districts
+        if district_name == "Oslo":
+            x0 += 2.5
+            y0 += 1.0
+        elif district_name == "Akershus":
+            x0 += 2.5
+            y0 -= 1.0
+        elif district_name == "Vestfold":
+            x0 += 1
+            y0 -= 1.0
+        elif district_name == "Østfold":
+            x0 += 0.5
+            y0 -= 0.5    
+        elif district_name == "Hedmark":
+            x0 += 0.75
+            y0 -= 0
+        elif district_name == "Hordaland":
+            x0 += 0.0
+            y0 += 0.5
+        elif district_name == "Rogaland":
+            x0 += 0.0
+            y0 += 0.25
+        elif district_name == "Aust-Agder":
+            x0 += 0.75
+            y0 -= 0 
+        elif district_name == "Telemark":
+            x0 += 0.24
+            y0 -= 0.15
+        elif district_name == "Buskerud":
+            x0 += 0
+            y0 += 0.15
+        elif district_name == "Sør-Trøndelag":
+            x0 += 0
+            y0 -= 0.15
+        elif district_name == "Nord-Trøndelag":
+            x0 += 0.30
+            y0 += 0.15
+        elif district_name == "Nordland":
+            x0 += 0
+            y0 += 0.15
+
+        # Dynamic spacing based on bounding box
+        minx, miny, maxx, maxy = geom.bounds
+        district_width = maxx - minx
+        spacing = (district_width / max_cols) * (1 - margin_ratio)
+        spacing = max(spacing, 0.1)  # Ensure minimum spacing
+
+        # Override spacing for pulled-out districts
+        if district_name in ["Oslo", "Akershus", "Vestfold", "Østfold","Sør-Trøndelag"]:
+            spacing = max(spacing, 0.25)
+
+        # Get mandates per party
+        mandates_per_party = (
+            results_df[results_df['Distrikt'] == district_name]
+            .groupby('Parti')['TotalMandater']
+            .sum()
+            .astype(int)
+            .to_dict()
+        )
+
+        party_list = []
+        for party in preferred_order:
+            party_list.extend([party] * mandates_per_party.get(party, 0))
+        for party in mandates_per_party:
+            if party not in preferred_order:
+                party_list.extend([party] * mandates_per_party[party])
+
+        for i, party in enumerate(party_list):
+            col = i % max_cols
+            row = i // max_cols
+            x = x0 + (col - max_cols / 2) * spacing
+            y = y0 - row * spacing
+
+            subset = results_df[(results_df['Parti'] == party) & (results_df['Distrikt'] == district_name)]
+            if not subset.empty and pd.notna(subset['Kategori'].values[0]):
+                kategori = subset['Kategori'].values[0]
+            else:
+                kategori = df[df['Parti'] == party]['Kategori'].values[0]  # fallback
+
+            all_dots.append({
+                'Distrikt': district_name,
+                'Parti': party,
+                'geometry': Point(x, y),
+                'Farge': color_mapping.get(kategori, '#CCCCCC')
+            })
+
+    return gpd.GeoDataFrame(all_dots, geometry='geometry', crs="EPSG:4258")
+
+
+# Generate dots
+dots_gdf = create_matrix_dots(results_df, gdf, max_cols=6)
+
+# Streamlit section
+st.subheader("Mandatfordeling per fylke (kartvisning)")
+
+# Create figure and plot map & dots
+fig, ax = plt.subplots(figsize=(12, 16))
+gdf.boundary.plot(ax=ax, color="black", linewidth=0.5)
+dots_gdf.plot(ax=ax, color=dots_gdf["Farge"], markersize=20)
+
+# Draw rectangles around matrices
+for district_name in dots_gdf['Distrikt'].unique():
+    district_dots = dots_gdf[dots_gdf['Distrikt'] == district_name]
+    if district_dots.empty:
+        continue
+
+    minx, miny, maxx, maxy = district_dots.total_bounds
+    width = maxx - minx
+    height = maxy - miny
+
+    rect = patches.Rectangle(
+        (minx - 0.01, miny - 0.01),
+        width + 0.02,
+        height + 0.02,
+        linewidth=0.5,
+        edgecolor='gray',
+        facecolor='none',
+        linestyle='--'
+    )
+    ax.add_patch(rect)
+
+# Draw lines from matrix center to district centroid
+for district_name in dots_gdf['Distrikt'].unique():
+    district_geom_row = gdf[gdf['valgdistriktsnavn'] == district_name]
+    district_dots = dots_gdf[dots_gdf['Distrikt'] == district_name]
+
+    if district_geom_row.empty or district_dots.empty:
+        continue
+
+    map_centroid = district_geom_row.geometry.values[0].centroid
+    dot_center = district_dots.geometry.unary_union.centroid
+
+    ax.plot(
+        [map_centroid.x, dot_center.x],
+        [map_centroid.y, dot_center.y],
+        color='gray',
+        linewidth=0.5,
+        linestyle='dotted'
+    )
+
+# Finalize and show
+ax.set_title("Mandatfordeling per valgdistrikt", fontsize=14)
+ax.axis("off")
+st.pyplot(fig)
