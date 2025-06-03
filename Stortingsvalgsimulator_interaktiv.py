@@ -796,18 +796,18 @@ def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_r
     import streamlit as st
     import pandas as pd
 
-    # 0) EKSKLUDER IKKE-POLITISKE RADER (f.eks. prognoser og velger-tall)
+    # 0) Ekskluder ikke-politiske rader (f.eks. prognoser og velger-tall)
     ikke_partier = [
         'Prognostisert valgoppslutning per fylke - godkjente stemmer',
         'Personer med stemmerett 2025'
     ]
     real_data = data_input[~data_input['Parti'].isin(ikke_partier)].copy()
 
-    # 1) NASJONALE STEMMER FOR ALLE “REELLE” PARTIER
+    # 1) Nasjonale stemmer for alle "reelle" partier
     all_votes = real_data.groupby('Parti')['Stemmer'].sum()
     total_votes = all_votes.sum()
 
-    # 2) FINN PARTIER SOM HAR ≥ 4 % NASJONALT OG STO PÅ LISTE I ALLE FYLKER (§ 11-7(2))
+    # 2) Finn partier som har ≥ 4 % nasjonalt og sto på liste i alle fylker (§ 11-7(2))
     fylker = fixed_districts['Fylke'].tolist()
 
     def har_stilt_i_alle_fylker(parti):
@@ -830,10 +830,10 @@ def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_r
         # Ingen som oppfyller § 11-7(2)
         return pd.DataFrame(columns=['Distrikt', 'Parti', 'Utjevningsmandater'])
 
-    # 3) HENT DISTRIKTSMANDATER FOR ALLE PARTIER (brukes til under4-trekking + overheng-sjekk)
+    # 3) Hent distriktsmandater for alle partier (brukes til under4-trekking + overheng-sjekk)
     district_mandates_full = real_data.groupby('Parti')['Distriktmandater'].sum()
 
-    # 4) KJØR NASJONAL SAINTE-LAGUË + OVERHENG-LOOP (§ 11-7(3–5))
+    # 4) Kjør nasjonal Sainte-Laguë + overheng-loop (§ 11-7(3–5))
     gjeldende_partier = four_percent_parties.copy()
 
     while True:
@@ -898,7 +898,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_r
         )
         return pd.DataFrame(columns=['Distrikt', 'Parti', 'Utjevningsmandater'])
 
-    # 6) FOR DYNAMISK FYLKESVIS UTVEILNGSMANDAT-TILDELING
+    # 6) For dynamisk tildeling av distriktmandat per distrikt
     #    a) Total stemmetall per fylke
     total_stemmer_per_fylke = {
         D: real_data[real_data['Distrikt'] == D]['Stemmer'].sum()
@@ -917,7 +917,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_r
         for D in per_district_df.index
     }
 
-    # 7) DEL UT 19 UTVEVNINGSMANDATER ÉN‐FOR‐ÉN (maks én per fylke, aldri mer enn behov per parti)
+    # 7) Del ut 19 utjevningsmandater én-for-én (maks én per valgdistrikt, aldri mer enn behov per parti)
     used_districts = set()
     levelling_list = []
 
@@ -959,7 +959,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_r
         else:
             break
 
-    # 8) MELDINGER OG RETUR
+    # 8) Meldinger og retur
     antall_fylker = len(used_districts)
     if antall_fylker < 19:
         st.success(
@@ -973,12 +973,6 @@ def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_r
         )
 
     return pd.DataFrame(levelling_list)
-
-
-
-
-
-
 
 def calculate_district_mandates(data_input, fixed_districts):
     districts = fixed_districts['Fylke'].unique()
