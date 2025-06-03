@@ -1268,7 +1268,7 @@ def create_matrix_dots(results_df, gdf, max_cols=6, margin_ratio=0.2):
 dots_gdf = create_matrix_dots(results_df, gdf, max_cols=6)
 
 # Streamlit section
-st.subheader("Mandatfordeling per valgdistrikt (kartvisning)")
+st.subheader("Simulert eller prognostisert mandatfordeling per valgdistrikt (kartvisning)")
 
 # Create figure and plot map & dots
 fig, ax = plt.subplots(figsize=(12, 16))
