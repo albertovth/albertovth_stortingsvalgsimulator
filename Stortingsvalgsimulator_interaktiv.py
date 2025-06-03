@@ -648,7 +648,7 @@ st.title("Stortingsvalgsimulator")
 
 
 st.markdown("""
-###  Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden. For å se venstremnyen fra mobile enheter: utvid med pilen til venstre. Da kan du justere prosentfordeling og valgdeltakelse per distrikt.
+###  Diagram og kart for prognostisert mandatfordeling presenteres nederst i hovedsiden. For å se venstremnyen fra mobile enheter: utvid med pilen til venstre. Da kan du justere prosentfordeling og valgdeltakelse per distrikt.
 """)
 
 # Sammendrag
@@ -1268,7 +1268,7 @@ def create_matrix_dots(results_df, gdf, max_cols=6, margin_ratio=0.2):
 dots_gdf = create_matrix_dots(results_df, gdf, max_cols=6)
 
 # Streamlit section
-st.subheader("Mandatfordeling per fylke (kartvisning)")
+st.subheader("Mandatfordeling per valgdistrikt (kartvisning)")
 
 # Create figure and plot map & dots
 fig, ax = plt.subplots(figsize=(12, 16))
