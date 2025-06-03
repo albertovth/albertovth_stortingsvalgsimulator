@@ -15,7 +15,8 @@ Stortingsvalgsimulatoren er ment å:
 ## Funksjoner
 
 - Interaktiv simulering av valgresultater.
-- Justering av parametere som stemmeandel og sperregrense.
+- Justering av parametere som stemmeandel.
+- Mulighet for å justere skriptet for å tilpasse til endringer i valgloven og mandatfordeling.
 - Visualisering av mandatfordeling.
 
 ## Slik bruker du appen
@@ -26,7 +27,7 @@ Stortingsvalgsimulatoren er ment å:
 
    *Kartet viser alle 169 mandater (distrikts- og utjevningsmandater) fordelt per valgdistrikt, som fargede prikker sortert etter parti.*
 
-### Hvordan å kjøre lokalt
+### Du kan også laste ned filene og kjøre appen lokalt
 
 1. **Installer Python**: Forsikre deg om at du har Python 3 installert på maskinen din.
 2. **Last ned prosjektet**: Gå til GitHub-repositoriet og last ned hele prosjektmappen som en ZIP-fil: [Stortingsvalgsimulator](https://github.com/albertovth/albertovth_stortingsvalgsimulator). Pakk ut filene på datamaskinen din.
