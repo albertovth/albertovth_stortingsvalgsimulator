@@ -1,5 +1,7 @@
 # Stortingsvalgsimulator
 
+[![Åpne appen i Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://valgsimulator.streamlit.app/)
+
 Velkommen til Stortingsvalgsimulatoren! Dette prosjektet er laget for å simulere valgresultater basert på siste lokale målinger i hvert valgdistrikt, gjennom den modifiserte Sainte-Lagues-metoden som gjelder for det norske valgsystemet. Simuleringen omfatter også utjevningsmandater.
 
 ## Formål
@@ -16,11 +18,13 @@ Stortingsvalgsimulatoren er ment å:
 - Justering av parametere som stemmeandel og sperregrense.
 - Visualisering av mandatfordeling.
 
-## Hvordan å bruke
+## Slik bruker du appen
 
 1. **Åpne nettleseren din**: Du trenger ikke å installere noe programvare eller laste ned skript.
 2. **Gå til Streamlit-appen**: [Klikk på denne lenken for å starte simulatoren](https://valgsimulator.streamlit.app/)
 3. **Utforsk**: Bruk menyene og valgene i appen for å simulere ulike valgscenarier. Juster parametere som stemmeandeler for partiene og se hvordan endringene påvirker mandatfordelingen.
+
+   *Kartet viser alle 169 mandater (distrikts- og utjevningsmandater) fordelt per valgdistrikt, som fargede prikker sortert etter parti.*
 
 ### Hvordan å kjøre lokalt
 
@@ -60,3 +64,8 @@ Dette prosjektet er lisensiert under [MIT-lisensen](https://opensource.org/licen
 Har du spørsmål eller tilbakemeldinger? Kontakt meg gjerne gjennom [GitHub-profilen min](https://github.com/albertovth).
 
 Takk for at du bruker Stortingsvalgsimulatoren, og lykke til med simuleringene.
+
+## Kartdata
+
+Kartdata: © [Kartverket](https://www.kartverket.no/) – brukt under Norsk lisens for offentlige data (NLOD).
+
