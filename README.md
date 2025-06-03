@@ -2,7 +2,7 @@
 
 [![Åpne appen i Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://valgsimulator.streamlit.app/)
 
-Velkommen til Stortingsvalgsimulatoren! Dette prosjektet er laget for å simulere valgresultater basert på siste lokale målinger i hvert valgdistrikt, gjennom den modifiserte Sainte-Lagues-metoden som gjelder for det norske valgsystemet. Simuleringen omfatter også utjevningsmandater.
+Velkommen til Stortingsvalgsimulatoren! Dette prosjektet er laget for å simulere valgresultater basert på siste lokale målinger i hvert valgdistrikt, gjennom den modifiserte Sainte-Laguës-metoden som gjelder for det norske valgsystemet. Simuleringen omfatter også utjevningsmandater.
 
 ## Formål
 
