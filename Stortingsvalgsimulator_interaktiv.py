@@ -1215,18 +1215,24 @@ def create_matrix_dots(results_df, gdf, max_cols=6, margin_ratio=0.2):
         elif district_name == "Nordland":
             x0 += 0
             y0 += 0.15
+        elif district_name == "Troms":
+            x0 += 0.45
+            y0 += 0
+        elif district_name == "Finnmark":
+            x0 += 1.0
+            y0 += 0
 
-        # Dynamic spacing based on bounding box
+        
         minx, miny, maxx, maxy = geom.bounds
         district_width = maxx - minx
         spacing = (district_width / max_cols) * (1 - margin_ratio)
-        spacing = max(spacing, 0.1)  # Ensure minimum spacing
+        spacing = max(spacing, 0.1)  
 
-        # Override spacing for pulled-out districts
+        
         if district_name in ["Oslo", "Akershus", "Vestfold", "Østfold","Sør-Trøndelag"]:
             spacing = max(spacing, 0.25)
 
-        # Get mandates per party
+        
         mandates_per_party = (
             results_df[results_df['Distrikt'] == district_name]
             .groupby('Parti')['TotalMandater']
@@ -1264,18 +1270,18 @@ def create_matrix_dots(results_df, gdf, max_cols=6, margin_ratio=0.2):
     return gpd.GeoDataFrame(all_dots, geometry='geometry', crs="EPSG:4258")
 
 
-# Generate dots
+
 dots_gdf = create_matrix_dots(results_df, gdf, max_cols=6)
 
-# Streamlit section
+
 st.subheader("Simulert eller prognostisert mandatfordeling per valgdistrikt (kartvisning)")
 
-# Create figure and plot map & dots
+
 fig, ax = plt.subplots(figsize=(12, 16))
 gdf.boundary.plot(ax=ax, color="black", linewidth=0.5)
 dots_gdf.plot(ax=ax, color=dots_gdf["Farge"], markersize=20)
 
-# Draw rectangles around matrices
+
 for district_name in dots_gdf['Distrikt'].unique():
     district_dots = dots_gdf[dots_gdf['Distrikt'] == district_name]
     if district_dots.empty:
@@ -1296,7 +1302,7 @@ for district_name in dots_gdf['Distrikt'].unique():
     )
     ax.add_patch(rect)
 
-# Draw lines from matrix center to district centroid
+
 for district_name in dots_gdf['Distrikt'].unique():
     district_geom_row = gdf[gdf['valgdistriktsnavn'] == district_name]
     district_dots = dots_gdf[dots_gdf['Distrikt'] == district_name]
@@ -1315,7 +1321,7 @@ for district_name in dots_gdf['Distrikt'].unique():
         linestyle='dotted'
     )
 
-# Finalize and show
+
 ax.set_title("Mandatfordeling per valgdistrikt", fontsize=14)
 ax.axis("off")
 st.pyplot(fig)
