@@ -68,5 +68,5 @@ Takk for at du bruker Stortingsvalgsimulatoren, og lykke til med simuleringene.
 
 ## Kartdata
 
-Kartdata: © [Kartverket](https://www.kartverket.no/) – brukt under Norsk lisens for offentlige data (NLOD).
+Kartdata: © [Kartverket](https://www.kartverket.no/) – tilgjengelig under [Creative Commons-lisens CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
