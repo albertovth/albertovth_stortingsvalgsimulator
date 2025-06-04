@@ -884,7 +884,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_r
         if not gjeldende_partier:
             return pd.DataFrame(columns=['Distrikt', 'Parti', 'Utjevningsmandater'])
 
-    # 5) BEREGN ENDLIG UTJEVNINGSBEHOV = nasjonalt_df[P] − district_mandates_4pct[P]
+    # 5) Beregn endelig utjevningsbehov = nasjonalt_df[P] − district_mandates_4pct[P]
     leveling_needs = {
         P: int(nasjonalt_df.loc[P, 'Mandater']) - int(district_mandates_4pct[P])
         for P in nasjonalt_df.index
