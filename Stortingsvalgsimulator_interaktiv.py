@@ -1087,8 +1087,10 @@ district_mandates_df.rename(columns={'index': 'Distrikt'}, inplace=True)
 st.write("Omformet tabell med distriktmandater:")
 st.write(district_mandates_df)
 results_df = results_df.merge(district_mandates_df, on=['Distrikt', 'Parti'], how='left')
+results_display = results_df.copy()
+results_display["Stemmer"] = results_display["Stemmer"].round(0).astype(int)
 st.write("Data med beregnede 'Distriktmandater':")
-st.write(results_df)
+st.write(results_display)
 levelling_mandates_df = distribute_levelling_mandates(results_df, fixed_districts, national_result)
 
 validate_used_districts(set(levelling_mandates_df['Distrikt']))
@@ -1097,8 +1099,10 @@ st.write("Utjevningsmandater per distrikt:")
 st.write(levelling_mandates_df)
 results_df = results_df.merge(levelling_mandates_df, on=['Distrikt', 'Parti'], how='left')
 results_df['Utjevningsmandater'] = results_df['Utjevningsmandater'].fillna(0).astype(int)
+results_display = results_df.copy()
+results_display["Stemmer"] = results_display["Stemmer"].round(0).astype(int)
 st.write("Data med beregnede'Utjevningsmandater':")
-st.write(results_df)
+st.write(results_display)
 results_df['TotalMandater'] = results_df['Distriktmandater'] + results_df['Utjevningsmandater']
 total_district_mandates = results_df['Distriktmandater'].sum()
 total_levelling_mandates = results_df['Utjevningsmandater'].sum()
@@ -1109,8 +1113,10 @@ if total_levelling_mandates != levelling_seats:
     st.error("Totale utjevningsmandater summerer ikke 19. Sjekk beregningene dine.")
 if total_mandates != total_seats:
     st.error("Totale mandater summerer ikke 169. Sjekk beregningene dine.")
+results_display = results_df.copy()
+results_display["Stemmer"] = results_display["Stemmer"].round(0).astype(int)
 st.subheader('Resultat etter valgdistrikt')
-st.write(results_df)
+st.write(results_display)
 aggregated_data = results_df.groupby(['Parti']).agg({
     'Stemmer': 'sum',
     'Distriktmandater': 'sum',
