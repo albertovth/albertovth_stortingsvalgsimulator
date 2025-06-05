@@ -759,6 +759,8 @@ for index, row in df.iterrows():
             results['Stemmer'].append(stemmer)
             results['Kategori'].append(row['Kategori'])
 results_df = pd.DataFrame(results)
+results_display = results_df.copy()
+results_display["Stemmer"] = results_display["Stemmer"].round(0).astype(int)
 st.write("### Simulerte valgresultater")
 st.dataframe(results_df)
 fixed_districts = pd.DataFrame({
