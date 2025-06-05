@@ -762,7 +762,7 @@ results_df = pd.DataFrame(results)
 results_display = results_df.copy()
 results_display["Stemmer"] = results_display["Stemmer"].round(0).astype(int)
 st.write("### Simulerte valgresultater")
-st.dataframe(results_df)
+st.dataframe(results_display)
 fixed_districts = pd.DataFrame({
     'Fylke': [
         'Oslo', 'Akershus', 'Hordaland', 'Rogaland', 'Sør-Trøndelag', 'Østfold', 'Nordland', 'Buskerud',
