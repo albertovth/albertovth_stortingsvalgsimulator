@@ -761,8 +761,9 @@ for index, row in df.iterrows():
 results_df = pd.DataFrame(results)
 results_display = results_df.copy()
 results_display["Stemmer"] = results_display["Stemmer"].round(0).astype(int)
+display_results = results_display.drop(columns=["Kategori"])
 st.write("### Simulerte valgresultater")
-st.dataframe(results_display)
+st.dataframe(display_results)
 fixed_districts = pd.DataFrame({
     'Fylke': [
         'Oslo', 'Akershus', 'Hordaland', 'Rogaland', 'Sør-Trøndelag', 'Østfold', 'Nordland', 'Buskerud',
