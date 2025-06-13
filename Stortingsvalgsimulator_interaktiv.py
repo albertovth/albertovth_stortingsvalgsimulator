@@ -35,7 +35,7 @@ default_values = {
     "PF",
     "FI",
     "Prognostisert valgoppslutning per fylke - godkjente stemmer",
-    "Personer med stemmerett 2021"
+    "Personer med stemmerett 2025"
   ],
   "Kategori": [
     4,
