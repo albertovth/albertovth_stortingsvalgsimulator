@@ -1118,8 +1118,9 @@ if total_mandates != total_seats:
     st.error("Totale mandater summerer ikke 169. Sjekk beregningene dine.")
 results_display = results_df.copy()
 results_display["Stemmer"] = results_display["Stemmer"].round(0).astype(int)
+display_results = results_display.drop(columns=["Kategori"])
 st.subheader('Resultat etter valgdistrikt')
-st.write(results_display)
+st.write(display_results)
 aggregated_data = results_df.groupby(['Parti']).agg({
     'Stemmer': 'sum',
     'Distriktmandater': 'sum',
@@ -1129,8 +1130,9 @@ aggregated_data = results_df.groupby(['Parti']).agg({
 }).reset_index()
 aggregated_display = aggregated_data.copy()
 aggregated_display["Stemmer"] = aggregated_display["Stemmer"].round(0).astype(int)
+display_aggregated = aggregated_display.drop(columns=["Kategori"])
 st.subheader('Resultat for hele landet')
-st.write(aggregated_display)
+st.write(display_aggregated)
 color_mapping = {
     1: '#8B0000', 2: '#A52A2A', 3: '#CD5C5C', 4: '#F08080', 5: '#FFA07A', 5.5: '#355E3B',
     6: '#ADD8E6', 7: '#6495ED', 8: '#4169E1', 9: '#0000CD', 10: '#0000FF',
