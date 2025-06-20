@@ -661,7 +661,15 @@ email_address = "alberto@vthoresen.no"
 
 
 st.title("Stortingsvalgsimulator")
+st.markdown("""
+## Innholdsfortegnelse
 
+- [Simulerte valgresultater](#simulerte-valgresultater)
+- [Resultat etter valgdistrikt](#resultat-etter-valgdistrikt)
+- [Resultat for hele landet](#resultat-for-hele-landet)
+- [Diagram](#diagram)
+- [Simulert eller prognostisert mandatfordeling per valgdistrikt (kartvisning)](#simulert-eller-prognostisert-mandatfordeling-per-valgdistrikt-kartvisning)
+""")
 
 st.markdown("""
 ###  Diagram og kart for prognostisert mandatfordeling og kart presenteres nederst i hovedsiden. For å se venstremenyen: utvid med pilen til venstre. Da kan du justere prosentfordeling og valgdeltakelse per distrikt.
