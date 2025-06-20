@@ -1168,7 +1168,7 @@ borgerlige_mandater = aggregated_data[aggregated_data['Parti'].isin(borgerlige_p
 st.markdown(f"**Rødgrønne: {rodgronne_mandater} mandater**")
 st.markdown(f"**Borgerlige: {borgerlige_mandater} mandater**")
 
-
+st.subheader('Diagram')
 plot_half_circle_chart(aggregated_data, color_mapping)
 
 import geopandas as gpd
