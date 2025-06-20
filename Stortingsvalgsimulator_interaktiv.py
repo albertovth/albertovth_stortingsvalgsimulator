@@ -6,11 +6,21 @@ from matplotlib.transforms import Affine2D
 st.set_page_config(layout="wide")
 st.markdown("""
     <style>
+    html, body, [data-testid="stAppViewContainer"] {
+        overflow-x: auto !important;
+    }
+
     .main .block-container {
-        overflow-x: auto;
+        overflow-x: auto !important;
+        width: auto !important;
+    }
+
+    .st-emotion-cache-z5fcl4 {
+        max-width: none !important;
     }
     </style>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
+
 
 default_values = {
   "Parti": [
