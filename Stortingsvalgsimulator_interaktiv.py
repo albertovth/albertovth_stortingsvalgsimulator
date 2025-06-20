@@ -648,7 +648,7 @@ st.title("Stortingsvalgsimulator")
 
 
 st.markdown("""
-###  Diagram og kart for prognostisert mandatfordeling presenteres nederst i hovedsiden. For å se venstremnyen fra mobile enheter: utvid med pilen til venstre. Da kan du justere prosentfordeling og valgdeltakelse per distrikt.
+###  Diagram og kart for prognostisert mandatfordeling presenteres nederst i hovedsiden. For å se venstremenyen fra mobile enheter: utvid med pilen til venstre. Da kan du justere prosentfordeling og valgdeltakelse per distrikt.
 """)
 
 # Sammendrag
