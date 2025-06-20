@@ -4,7 +4,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.transforms import Affine2D
 st.set_page_config(layout="wide")
-
+st.markdown("""
+    <style>
+    .main .block-container {
+        overflow-x: auto;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 default_values = {
   "Parti": [
