@@ -727,7 +727,7 @@ def validate_percentage_sums(percentage_dict, districts, partier):
         st.success("Alle distriktsprosentene summerer til 100 % ± 0.1 %.")
 
 
-st.sidebar.header("Her kan du endre prosent")
+st.sidebar.header("Her kan du endre oppslutning og valgdeltagelse i prosent")
 for distrikt in districts:
     if distrikt not in ['Prognostisert valgoppslutning per fylke - godkjente stemmer', 'Personer med stemmerett 2025']:
         st.sidebar.subheader(distrikt)
