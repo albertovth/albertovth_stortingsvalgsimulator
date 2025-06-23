@@ -903,7 +903,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_r
         # 4f) Overheng-sjekk: dersom noen har distriktsmandater > nasjanalt tildelte, fjern dem
         overhang = [
             P for P in gjeldende_partier
-            if district_mandates_4pct[P] > nasjonalt_df.loc[P, 'Mandater']
+            if district_mandates_4pct[P] >= nasjonalt_df.loc[P, 'Mandater']
         ]
 
         if not overhang:
