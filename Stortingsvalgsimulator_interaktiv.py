@@ -702,6 +702,14 @@ st.markdown("Juster prognoser for valgresultater for valgdistriktene i venstreme
             "siste oppdatering per 13. juni 2025, med estimater for antall personer med stemmerett per valgdistrikt basert på tall for 2023 og ekstrapolering av befolkningsvekst (kilde SSB). Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
             "Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier), fra Poll of polls (Dvs. mindre partier, som ikke er R, SV, Ap, Sp, MDG, V, KrF, H og Frp) fordeles proporsjonelt til andre partier som deltok i Stortingsvalget 2021, basert på resultatet disse partiene fikk da. Du kan justere prosent for disse partiene, eller oppdatere prosenten til de store partiene i venstremenyen. For bedre resultater sørg for at prosentandel for alle partier i valgdistriktet summerer 100 prosent.")
 
+st.markdown("""
+### Feilmarginer
+
+Feilmarginene i distriktsmålingene varierer etter utvalgsstørrelse og parti, men ligger i snitt rundt ±1,7 prosentpoeng.  
+Medianen er noe lavere, på ±1,55 prosentpoeng (per juni 2025).
+
+For detaljer per måling og distrikt, se kildedata fra [Poll of polls](https://www.pollofpolls.no/).
+""")
 
 # Kilder
 st.markdown("### Kilder")
