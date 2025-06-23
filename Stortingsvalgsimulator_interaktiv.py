@@ -708,7 +708,7 @@ st.markdown("""
 Feilmarginene i distriktsmålingene varierer etter utvalgsstørrelse og parti, men ligger i snitt rundt ±1,7 prosentpoeng.  
 Medianen er noe lavere, på ±1,55 prosentpoeng (per juni 2025).
 
-For detaljer per måling og distrikt, se kildedata fra [Poll of polls](https://www.pollofpolls.no/).
+For detaljer per måling og distrikt, se kildedata fra [Poll of polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0).
 """)
 
 # Kilder
