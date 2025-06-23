@@ -912,7 +912,7 @@ def distribute_levelling_mandates(data_input, fixed_districts, _dummy_national_r
         for P in overhang:
             st.info(
                 f"Parti {P} fjernes fra utjevning (overheng: "
-                f"{int(district_mandates_4pct[P])} distriktsmandater > "
+                f"{int(district_mandates_4pct[P])} distriktsmandater >= "
                 f"{int(nasjonalt_df.loc[P, 'Mandater'])} nasjonale mandater)."
             )
             gjeldende_partier.remove(P)
