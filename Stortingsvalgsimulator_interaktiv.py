@@ -672,7 +672,7 @@ st.markdown("""
 """)
 
 st.markdown("""
-###  Diagram og kart for prognostisert mandatfordeling og kart presenteres nederst i hovedsiden. For å se venstremenyen: utvid med pilen til venstre. Da kan du justere prosentfordeling og valgdeltakelse per distrikt.
+###  Diagram og kart for prognostisert mandatfordeling presenteres nederst i hovedsiden. For å se venstremenyen: utvid med pilen til venstre. Da kan du justere prosentfordeling og valgdeltakelse per distrikt.
 """)
 
 # Sammendrag
