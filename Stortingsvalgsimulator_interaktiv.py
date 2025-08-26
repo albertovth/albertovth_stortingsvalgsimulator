@@ -294,32 +294,32 @@ default_values = {
     "206304"
   ],
   "Telemark": [
-    "33.40%",
-    "14.30%",
-    "23.60%",
+    "29.60%",
+    "10.90%",
+    "22.90%",
+    "4.80%",
+    "7.60%",
     "4.50%",
-    "6.80%",
-    "3.90%",
-    "1.60%",
-    "1.90%",
-    "5.40%",
-    "0.05%",
-    "0.69%",
+    "2.40%",
+    "4.10%",
+    "7.00%",
+    "0.07%",
+    "0.92%",
+    "0.26%",
+    "0.13%",
+    "0.46%",
+    "0.39%",
+    "0.07%",
+    "0.39%",
     "0.20%",
-    "0.10%",
-    "0.35%",
-    "0.30%",
-    "0.05%",
-    "0.30%",
-    "0.15%",
-    "2.23%",
-    "0.05%",
-    "0.05%",
+    "2.95%",
+    "0.07%",
+    "0.07%",
     "0.00%",
     "0.00%",
     "0.00%",
-    "0.05%",
-    "0.05%",
+    "0.07%",
+    "0.07%",
     "74.50%",
     "143336"
   ],
@@ -384,25 +384,25 @@ default_values = {
     "163306"
   ],
   "Rogaland": [
-    "19.20%",
-    "17.60%",
-    "25.40%",
-    "5.70%",
-    "5.60%",
-    "9.40%",
-    "3.30%",
-    "2.50%",
-    "5.80%",
+    "25.30%",
+    "16.20%",
+    "23.20%",
+    "4.10%",
+    "4.50%",
+    "8.10%",
+    "4.30%",
+    "2.30%",
+    "6.40%",
     "0.04%",
-    "0.41%",
-    "0.20%",
-    "0.08%",
-    "0.20%",
-    "0.24%",
-    "0.08%",
-    "0.24%",
-    "0.16%",
-    "3.29%",
+    "0.44%",
+    "0.22%",
+    "0.09%",
+    "0.22%",
+    "0.26%",
+    "0.09%",
+    "0.26%",
+    "0.18%",
+    "3.54%",
     "0.04%",
     "0.04%",
     "0.00%",
@@ -690,7 +690,7 @@ st.markdown(f"Kontakt: [Alberto Valiente Thoresen](mailto:{email_address})")
 # Viktig melding
 st.warning("""
 **Viktig melding:**
-Per siste oppdatering 22. august 2025 er eldste meningsmåling fra 22. mai 2025 og nyeste fra 22. august 2025.
+Per siste oppdatering 22. august 2025 er eldste meningsmåling fra 22. mai 2025 og nyeste fra 25. august 2025.
 Nyere data vil bli inkludert etterhvert som de blir tilgjengelige. Oppdateringer vil bli gjort rundt en gang i måneden frem til sommeren 2025, og hyppigere rett før valget, som er i september 2025.
 Merk også at kategorien "Andre" i Poll of polls omfatter flere partier. Dette fordeles proporsjonelt til "Andre" partier som deltok ved forrige valg, ifølge stemmene de fikk. Dette er ikke presis, men det er bedre enn å behandle hele kategorien "Andre" som ett parti.
 """)
@@ -699,7 +699,7 @@ Merk også at kategorien "Andre" i Poll of polls omfatter flere partier. Dette f
 st.markdown("### Diagram og simulering")
 st.markdown("Juster prognoser for valgresultater for valgdistriktene i venstremenyen. Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen. \n"
             "Utgangspunktet baseres på raden 'Siste lokale måling' som publiseres i [Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), "
-            "siste oppdatering per 22. august 2025, med estimater for antall personer med stemmerett per valgdistrikt basert på tall for 2023 og ekstrapolering av befolkningsvekst (kilde SSB). Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
+            "siste oppdatering per 25. august 2025, med estimater for antall personer med stemmerett per valgdistrikt basert på tall for 2023 og ekstrapolering av befolkningsvekst (kilde SSB). Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n"
             "Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier), fra Poll of polls (Dvs. mindre partier, som ikke er R, SV, Ap, Sp, MDG, V, KrF, H og Frp) fordeles proporsjonelt til andre partier som deltok i Stortingsvalget 2021, basert på resultatet disse partiene fikk da. Du kan justere prosent for disse partiene, eller oppdatere prosenten til de store partiene i venstremenyen. For bedre resultater sørg for at prosentandel for alle partier i valgdistriktet summerer 100 prosent.")
 
 st.markdown("""
@@ -1367,6 +1367,7 @@ for district_name in dots_gdf['Distrikt'].unique():
 ax.set_title("Mandatfordeling per valgdistrikt", fontsize=14)
 ax.axis("off")
 st.pyplot(fig)
+
 
 
 
