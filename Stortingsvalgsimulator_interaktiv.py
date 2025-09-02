@@ -702,9 +702,9 @@ Merk også at kategorien "Andre" i Poll of polls omfatter flere partier. Dette f
 
 # Diagram og instruksjoner
 st.markdown("### Diagram og simulering")
-st.markdown(f"""Juster prognoser for valgresultater for valgdistriktene i venstremenyen. Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen. \n
-            Utgangspunktet baseres på raden 'Siste lokale måling' som publiseres i [Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), \n
-            siste oppdatering per {siste_oppdatering_dato}, med estimater for antall personer med stemmerett per valgdistrikt basert på tall for 2023 og ekstrapolering av befolkningsvekst (kilde SSB). Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  \n
+st.markdown(f"""Juster prognoser for valgresultater for valgdistriktene i venstremenyen. Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen. 
+            Utgangspunktet baseres på raden 'Siste lokale måling' som publiseres i [Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), 
+            siste oppdatering per {siste_oppdatering_dato}, med estimater for antall personer med stemmerett per valgdistrikt basert på tall for 2023 og ekstrapolering av befolkningsvekst (kilde SSB). Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  
             Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier), fra Poll of polls (Dvs. mindre partier, som ikke er R, SV, Ap, Sp, MDG, V, KrF, H og Frp) fordeles proporsjonelt til andre partier som deltok i Stortingsvalget 2021, basert på resultatet disse partiene fikk da. Du kan justere prosent for disse partiene, eller oppdatere prosenten til de store partiene i venstremenyen. For bedre resultater sørg for at prosentandel for alle partier i valgdistriktet summerer 100 prosent.""")
 
 st.markdown("""
@@ -1372,6 +1372,7 @@ for district_name in dots_gdf['Distrikt'].unique():
 ax.set_title("Mandatfordeling per valgdistrikt", fontsize=14)
 ax.axis("off")
 st.pyplot(fig)
+
 
 
 
