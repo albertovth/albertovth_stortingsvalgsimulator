@@ -22,8 +22,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-siste_oppdatering_dato = "5. september 2025"
-siste_meningsmåling_dato = "5. september 2025"
+siste_oppdatering_dato = "8. september 2025"
+siste_meningsmåling_dato = "6. september 2025"
 første_meningsmåling_dato = "27. august 2025"  # Python 3 supports Unicode variable names
 
 
@@ -1372,6 +1372,7 @@ for district_name in dots_gdf['Distrikt'].unique():
 ax.set_title("Mandatfordeling per valgdistrikt", fontsize=14)
 ax.axis("off")
 st.pyplot(fig)
+
 
 
 
