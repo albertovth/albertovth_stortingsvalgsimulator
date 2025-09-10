@@ -695,17 +695,15 @@ st.markdown(f"Kontakt: [Alberto Valiente Thoresen](mailto:{email_address})")
 # Viktig melding
 st.warning(f"""
 **Viktig melding:**
-Per siste oppdatering {siste_oppdatering_dato} er eldste meningsmåling fra {første_meningsmåling_dato} og nyeste fra {siste_meningsmåling_dato}.
-Nyere data vil bli inkludert etterhvert som de blir tilgjengelige. Oppdateringer vil bli gjort rundt en gang i måneden frem til sommeren 2025, og hyppigere rett før valget, som er i september 2025.
-Merk også at kategorien "Andre" i Poll of polls omfatter flere partier. Dette fordeles proporsjonelt til "Andre" partier som deltok ved forrige valg, ifølge stemmene de fikk. Dette er ikke presis, men det er bedre enn å behandle hele kategorien "Andre" som ett parti.
-""")
+Per siste oppdatering {siste_oppdatering_dato} er eldste telling av valgresultatet fra {første_meningsmåling_dato} og nyeste fra {siste_meningsmåling_dato}.
+Nyere data vil bli inkludert etterhvert som de blir tilgjengelige.""")
 
 # Diagram og instruksjoner
 st.markdown("### Diagram og simulering")
 st.markdown(f"""Juster prognoser for valgresultater for valgdistriktene i venstremenyen. Valgdeltagelse per distrikt kan også oppgis nederst i venstremenyen. 
-            Utgangspunktet baseres på raden 'Siste lokale måling' som publiseres i [Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), 
-            siste oppdatering per {siste_oppdatering_dato}, med estimater for antall personer med stemmerett per valgdistrikt basert på tall for 2023 og ekstrapolering av befolkningsvekst (kilde SSB). Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  
-            Det kan ta litt tid før dette vises. Kategorien 'Andre' (partier), fra Poll of polls (Dvs. mindre partier, som ikke er R, SV, Ap, Sp, MDG, V, KrF, H og Frp) fordeles proporsjonelt til andre partier som deltok i Stortingsvalget 2021, basert på resultatet disse partiene fikk da. Du kan justere prosent for disse partiene, eller oppdatere prosenten til de store partiene i venstremenyen. For bedre resultater sørg for at prosentandel for alle partier i valgdistriktet summerer 100 prosent.""")
+            Utgangspunktet baseres på valgresultatet 2025. Deretter, ettersom nye meningsmålinger blir tilgjengelige, baseres utgangspunktet på raden 'Siste lokale måling' som publiseres i [Poll of Polls](https://www.pollofpolls.no/?cmd=Stortinget&fylke=0), 
+            siste oppdatering per {siste_oppdatering_dato}, med estimater for antall personer med stemmerett per valgdistrikt basert på tall fra SSB og ekstrapolering av befolkningsvekst (også tall fra SSB). Diagram for prognostisert mandatfordeling presenteres nederst i hovedsiden.  
+            Det kan ta litt tid før dette vises. Når utgangspunktet bruker data fra meningsmålinger vil kategorien 'Andre' (partier), fra Poll of polls (Dvs. mindre partier, som ikke er R, SV, Ap, Sp, MDG, V, KrF, H og Frp) fordeles proporsjonelt til andre partier som deltok i Stortingsvalget 2025, basert på resultatet disse partiene fikk da. Du kan justere prosent for disse partiene, eller oppdatere prosenten til de store partiene i venstremenyen. For bedre resultater sørg for at prosentandel for alle partier i valgdistriktet summerer 100 prosent.""")
 
 st.markdown("""
 ### Feilmarginer
@@ -1372,6 +1370,7 @@ for district_name in dots_gdf['Distrikt'].unique():
 ax.set_title("Mandatfordeling per valgdistrikt", fontsize=14)
 ax.axis("off")
 st.pyplot(fig)
+
 
 
 
