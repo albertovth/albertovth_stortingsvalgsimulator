@@ -316,6 +316,16 @@ results_df = pd.DataFrame(results)
 results_display = results_df.copy()
 results_display["Stemmer"] = results_display["Stemmer"].round(0).astype(int)
 display_results = results_display.drop(columns=["Kategori"])
+st.write("""
+**Merk:** Antall stemmer per parti per valgdistrikt i denne modellen er beregnet ut fra
+`fremmøteprosent × antall stemmeberettigede`, og deretter fordelt på partier i henhold
+til prosentvis oppslutning. Blanke og forkastede stemmer er ikke trukket ut separat,
+men behandles implisitt som om de var fordelt jevnt på partiene. Dette innebærer at
+de oppgitte stemmetallene kan avvike noe fra de offisielle tallene fra Valgdirektoratet.
+Mandatfordelingen påvirkes ikke av dette, ettersom metode (Sainte-Laguë) kun er
+avhengig av relative størrelser mellom partiene.
+""")
+
 st.write("### Simulerte valgresultater")
 st.dataframe(display_results)
 fixed_districts = pd.DataFrame({
@@ -888,6 +898,7 @@ for district_name in dots_gdf['Distrikt'].unique():
 ax.set_title("Mandatfordeling per valgdistrikt", fontsize=14)
 ax.axis("off")
 st.pyplot(fig)
+
 
 
 
