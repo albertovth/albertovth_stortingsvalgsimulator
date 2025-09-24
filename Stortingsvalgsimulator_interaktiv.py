@@ -320,8 +320,8 @@ st.write("""
 **Merk:** Antall stemmer per parti per valgdistrikt i denne modellen er beregnet ut fra
 `fremmøteprosent × antall stemmeberettigede`, og deretter fordelt på partier i henhold
 til prosentvis oppslutning. Blanke og forkastede stemmer er ikke trukket ut separat,
-men behandles implisitt som om de var fordelt jevnt på partiene. Dette innebærer at
-de oppgitte stemmetallene kan avvike noe fra de offisielle tallene fra Valgdirektoratet.
+men behandles implisitt som om de var fordelt på partiene i henhold
+til prosentvis oppslutning. Dette innebærer at de oppgitte stemmetallene kan avvike noe fra de offisielle tallene fra Valgdirektoratet.
 Mandatfordelingen påvirkes ikke av dette, ettersom metode (Sainte-Laguë) kun er
 avhengig av relative størrelser mellom partiene.
 """)
@@ -898,6 +898,7 @@ for district_name in dots_gdf['Distrikt'].unique():
 ax.set_title("Mandatfordeling per valgdistrikt", fontsize=14)
 ax.axis("off")
 st.pyplot(fig)
+
 
 
 
